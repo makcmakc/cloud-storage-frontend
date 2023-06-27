@@ -22,13 +22,19 @@ const router = createRouter({
       path: '/photos',
       name: 'photos',
       component: () => import('../views/photos.vue'),
-      meta: { title: 'Фото' }
+      meta: {
+        title: 'Фото',
+        layout: 'default',
+      }
     },
     {
       path: '/trash',
       name: 'trash',
       component: () => import('../views/trash.vue'),
-      meta: { title: 'Корзина' }
+      meta: {
+        title: 'Корзина',
+        layout: 'default'
+      }
     },
     {
       path: '/auth',

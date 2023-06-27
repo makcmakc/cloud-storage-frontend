@@ -13,7 +13,7 @@ export default defineComponent({
         const layout = computed(() => {
             const layout = route?.meta?.layout
 
-            console.log(layout)
+            // console.log(layout)
 
             if (layout) {
                 return `${layout}`

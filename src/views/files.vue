@@ -1,55 +1,16 @@
 <template>
   <div class="client-listing">
 
-    
     <div class="client-listing__container">
       <div class="container">
         <div class="list__items list--theme-tile">
-          
 
-          <div v-for="item in listItems" :key="item.id">
-            <FileCard :item="item"  />
-          </div>
-          
-          <!-- <div class="list-item">
-            <div class="list-item__icon">
-              <i class="list-item__ext"></i>
-              <img src="https://w.forfun.com/fetch/59/594a7ca775cfa7df41a4f9e70af26140.jpeg" class="list-item__img" alt="">
-            </div>
-            <div class="list-item__info">
-              <div class="list-item__name">
-                <span>Cara Delevingne</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="list-item">
-            <div class="list-item__icon">
-              <i class="list-item__ext"></i>
-              <img src="https://hips.hearstapps.com/hmg-prod/images/cara6-1643645738.jpg?resize=980:*" class="list-item__img" alt="">
-            </div>
-            <div class="list-item__info">
-              <div class="list-item__name">
-                <span>Cara Delevingne cover interview | Manifesting a baby and leading with kindness.jpeg</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="list-item">
-            <div class="list-item__icon">
-              <i class="list-item__ext"></i>
-              <img src="https://w.forfun.com/fetch/59/594a7ca775cfa7df41a4f9e70af26140.jpeg" class="list-item__img" alt="">
-            </div>
-            <div class="list-item__info">
-              <div class="list-item__name">
-                <span>Cara Delevingne</span>
-              </div>
-            </div>
-          </div> -->
+          <FileCard v-for="item in listItems" :key="item.id" :item="item"  />
 
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -119,9 +80,7 @@ const listItems = [
 </script>
 
 
-
 <style lang="scss">
-
 .list {
   &__items {
     position: relative;
@@ -171,7 +130,6 @@ const listItems = [
       img {
         max-height: 120px;
         max-width: 120px;
-        // border: 1px solid rgba(0,0,0,.1);
         box-sizing: border-box;
         display: block;
       }
@@ -226,55 +184,5 @@ const listItems = [
 .list--theme-tile {
   display: flex;
   width: 100%;
-}
-
-.target {
-  background: #42b883;
-  width: 60px;
-  height: 60px;
-  padding: 10px;
-
-  padding: 12px;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-  margin-bottom: 4px;
-
-  display: flex;
-  -webkit-flex-shrink: 0;
-  flex-shrink: 0;
-  // width: 100%;
-  // padding: 16px 20px;/
-  color: var(--color-mg-typo-primary);
-  font-size: 13px;
-  line-height: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-
-  &.active {
-    background: darken(#42b883, 8%);
-  }
-}
-.target.selected {
-  border: 4px solid #f55;
-  padding: 20px;
-}
-.button {
-  position: absolute;
-  left: 500px;
-  top: 50px;
-  background: #eee;
-  padding: 15px 40px;
-  display: inline-block;
-  border-radius: 5px;
-  font-weight: bold;
-  color: #444;
-}
-.button.selected {
-  color: #fff;
-  background: #66d;
 }
 </style>

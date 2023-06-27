@@ -1,4 +1,4 @@
-
+// Sidebar
 .app-aside {
   width: 256px;
   background-color: #f4f6f9;
@@ -19,7 +19,6 @@
     margin-top: 1.5rem;
   }
   
-
   &__list {
     list-style: none;
     padding: 0;
@@ -45,5 +44,39 @@
     position: sticky;
     bottom: 0;
     padding: 0 20px 0px;
+  }
+}
+
+// Info space
+.info-space {
+  margin-top: 12px;
+  display: block;
+  color: #000;
+  border-radius: 4px;
+  background: linear-gradient(180deg,#42b883,#def1db);
+  padding: 16px 12px;
+
+  &__footer {
+    margin-top: 10px;
+  }
+}
+
+.indicator-bar {
+  background-color: rgba(0,0,0,.07);
+  position: relative;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: darken(#42b883, 8%);
+
+  &__value {
+    border-radius: 4px;
+    background: #fff;
+    position: relative;
+    height: 8px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    overflow: hidden;
+    // background-color: #6c6;
   }
 }

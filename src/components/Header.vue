@@ -12,13 +12,9 @@
         </router-link>
 
         <div class="app-settings" ref="settings">
-
-          <cogIcon style="font-size: 1.4em; margin-top: 6px;"  @click="isOpen = !isOpen" />
-
-          <div class="app-settings__content" v-if="isOpen" >
-            <router-link to="/auth">Auth</router-link>
-          </div>
-
+          <router-link to="/auth">
+            <cogIcon style="font-size: 1.4em; margin-top: 6px;"  @click="isOpen = !isOpen" />
+          </router-link>
         </div>
       </div>
 
