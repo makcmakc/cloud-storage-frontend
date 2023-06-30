@@ -1,12 +1,12 @@
 <template>
-  <button class="btn btn--upload" @click="uploadFile">
+  <button class="btn btn--upload">
     <i class="btn-icon"><cloudUploadOutline /></i>
     <div class="upload-button__attach-wrapper">
       <input
+        ref="file"
         type="file"
         class="upload-button__attach"
-        accept=""
-        multiple=""
+        @change="uploadFile($event)"
         title="Загрузить файлы"
       />
     </div>
@@ -17,7 +17,34 @@
 
 <script setup>
 import cloudUploadOutline from '~icons/mdi/cloud-upload-outline'
-const uploadFile = () => {}
+import * as Api from '@/api'
+import { ref } from 'vue';
+
+const file = ref(null)
+const form = ref(null)
+
+const uploadFile = async ($event) => {
+  try {
+
+    const file = $event.target.files[0];
+
+    console.log(file)
+
+    if (file !== undefined) await Api.files.uploadFile(file)
+    // await Api.files.uploadFile(file)
+
+    // if (target && target.files) {
+    //   file.value = target.files[0];
+
+    //   // await Api.files.uploadFile(file.value)
+    //   console.log(file.value)
+    // }
+
+
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 
 

@@ -3,7 +3,7 @@
     <div class="app-auth">
 
       <div class="app-auth__header">
-        <h3 class="app-auth__title">Login Form</h3>
+        <h3 class="app-auth__title">Register Form</h3>
       </div>
       
       <div class="app-auth__content">
@@ -11,19 +11,30 @@
           <fieldset class="auth-form__fieldset">
             <div class="text-field">
               <span class="text-field__preffix">
-                <accountIcon />
+                <emailIcon />
               </span>
               <input v-model="email" class="text-field__inner" placeholder="E-mail" />
             </div>
           </fieldset>
+
+          <fieldset class="auth-form__fieldset">
+            <div class="text-field">
+              <span class="text-field__preffix">
+                <accountIcon />
+              </span>
+              <input v-model="fullName" class="text-field__inner" placeholder="Full Name" />
+            </div>
+          </fieldset>
+
           <fieldset class="auth-form__fieldset">
             <div class="text-field">
               <span class="text-field__preffix">
                 <lockIcon />
               </span>
-              <input v-model="password" class="text-field__inner" placeholder="Password" />
-              <span class="text-field__suffix">
-                <eyeIcon />
+              <input v-model="password" :type="passwordVisiblity ? 'text' : 'password'" class="text-field__inner" placeholder="Password" />
+              <span class="text-field__suffix" @click="passwordVisiblity = !passwordVisiblity">
+                <eyeIcon v-if="!passwordVisiblity" />
+                <eyeOff v-else />
               </span>
             </div>
           </fieldset>
@@ -40,8 +51,8 @@
 import accountIcon from '~icons/mdi/account';
 import lockIcon from '~icons/mdi/lock';
 import eyeIcon from '~icons/mdi/eye';
-import eyeLock from '~icons/mdi/eye-lock';
-
+import eyeOff from '~icons/mdi/eye-off';
+import emailIcon from '~icons/mdi/email';
 import * as Api from '@/api'
 import { setCookie } from 'nookies'
 
@@ -51,23 +62,26 @@ export default {
     accountIcon,
     lockIcon,
     eyeIcon,
-    eyeLock
+    eyeOff,
+    emailIcon
   },
   data() {
     return {
       passwordVisiblity: false,
       password: null,
       email: null,
+      fullName: null
     }
   },
   methods: {
     async submitHandler() {
       const data = {
         email: this.email,
-        password: this.password
+        password: this.password,
+        fullName: this.fullName
       }
       try {
-        const {token} = await Api.auth.login(data)
+        const {token} = await Api.auth.register(data)
 
         setCookie(null, "_token", token, { path: "/" })
 

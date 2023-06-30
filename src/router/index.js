@@ -36,10 +36,27 @@ const router = createRouter({
         layout: 'default'
       }
     },
+
     {
       path: '/auth',
       name: 'auth',
       component: () => import('../views/auth.vue'),
+      meta: {
+        layout: 'empty',
+      }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/register.vue'),
+      meta: {
+        layout: 'empty',
+      }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/profile.vue'),
       meta: {
         layout: 'empty',
       }
