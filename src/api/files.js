@@ -1,7 +1,6 @@
 import axios from "@/core/axios";
 
-// type FileType = "all" | "photos" | "trash";
-
+// types = "all" | "photos" | "trash";
 export const getAll = async (type) => {
   return (await axios.get("/files?type=" + type)).data
 }
@@ -12,7 +11,7 @@ export const remove = ids => {
 
 export const uploadFile = async (options) => {
   const file = options;
-  if (file) {
+  // if (file) {
   const formData = new FormData();
   formData.append("file", file);
 
@@ -27,5 +26,5 @@ export const uploadFile = async (options) => {
   } catch (err) {
     console.log(err)
   }
-}
+// }
 };

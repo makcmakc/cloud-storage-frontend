@@ -1,6 +1,6 @@
 // Sidebar
 .app-aside {
-  width: 256px;
+  width: 310px;
   background-color: #f4f6f9;
   display: flex;
   flex-direction: column;
@@ -17,25 +17,19 @@
     flex-grow: 1;
     font-size: 1rem;
     margin-top: 1.5rem;
-  }
-  
-  &__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 20px;
 
-    &-item {
+    &-link {
       color: #000;
-      padding: 5px 20px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
 
       &:hover {
         background: #E4E7ED;
-      }
-
-      a {
-        display: flex;
-        align-items: center;
-        gap: 10px;
       }
     }
   }
@@ -79,4 +73,8 @@
     overflow: hidden;
     // background-color: #6c6;
   }
+}
+
+.router-link-exact-active {
+  background: #E4E7ED;
 }

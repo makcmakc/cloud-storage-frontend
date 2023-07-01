@@ -1,46 +1,55 @@
 <template>
   <div class="wrapper">
-    <div class="app-auth">
 
-      <div class="app-auth__header">
-        <h3 class="app-auth__title">Login Form</h3>
+    <div class="auth-wrapper">
+      <div class="auth-left"></div>
+
+      <div class="auth-right">
+        <div class="app-auth">
+          <div class="app-auth__header">
+            <h3 class="app-auth__title">Sign In</h3>
+          </div>
+
+          <div class="app-auth__content">
+            <form class="auth-form" @submit.prevent="submitHandler">
+              <div class="auth-form__fieldset">
+                <div class="text-field">
+                  <span class="text-field__preffix">
+                    <accountIcon />
+                  </span>
+                  <input v-model="email" class="text-field__inner" placeholder="E-mail" />
+                </div>
+              </div>
+
+              <div class="auth-form__fieldset">
+                <div class="text-field">
+                  <span class="text-field__preffix">
+                    <lockIcon />
+                  </span>
+                  <input v-model="password" :type="passwordVisiblity ? 'text' : 'password'" class="text-field__inner" placeholder="Password" />
+                  <span class="text-field__suffix" @click="passwordVisiblity = !passwordVisiblity">
+                    <eyeIcon v-if="!passwordVisiblity" />
+                    <eyeOff v-else />
+                  </span>
+                </div>
+              </div>
+
+              <button class="auth-form__btn">Sign In</button>
+            </form>
+          </div>
+        </div>
       </div>
-      
-      <div class="app-auth__content">
-        <form class="auth-form" @submit.prevent="submitHandler">
-          <fieldset class="auth-form__fieldset">
-            <div class="text-field">
-              <span class="text-field__preffix">
-                <accountIcon />
-              </span>
-              <input v-model="email" class="text-field__inner" placeholder="E-mail" />
-            </div>
-          </fieldset>
-          <fieldset class="auth-form__fieldset">
-            <div class="text-field">
-              <span class="text-field__preffix">
-                <lockIcon />
-              </span>
-              <input v-model="password" class="text-field__inner" placeholder="Password" />
-              <span class="text-field__suffix">
-                <eyeIcon />
-              </span>
-            </div>
-          </fieldset>
 
-          <button class="auth-form__btn">Submit</button>
-        </form>
-      </div>
-
-    </div>  
+    </div>
   </div>
 </template>
 
 <script>
-import accountIcon from '~icons/mdi/account';
-import lockIcon from '~icons/mdi/lock';
-import eyeIcon from '~icons/mdi/eye';
-import eyeLock from '~icons/mdi/eye-lock';
+import accountIcon from '~icons/mdi/account'
+import lockIcon from '~icons/mdi/lock'
+import eyeIcon from '~icons/mdi/eye'
+import eyeLock from '~icons/mdi/eye-lock'
+import eyeOff from '~icons/mdi/eye-off';
 
 import * as Api from '@/api'
 import { setCookie } from 'nookies'
@@ -51,13 +60,14 @@ export default {
     accountIcon,
     lockIcon,
     eyeIcon,
-    eyeLock
+    eyeLock,
+    eyeOff
   },
   data() {
     return {
       passwordVisiblity: false,
       password: null,
-      email: null,
+      email: null
     }
   },
   methods: {
@@ -67,46 +77,80 @@ export default {
         password: this.password
       }
       try {
-        const {token} = await Api.auth.login(data)
+        const { token } = await Api.auth.login(data)
 
-        setCookie(null, "_token", token, { path: "/" })
+        setCookie(null, '_token', token, { path: '/' })
 
         this.$router.push('/')
-      } catch(err) {
+      } catch (err) {
         console.log(err)
       }
     }
-  },
-  mounted() {
-    console.log(this.$route.meta.layout)
-    if (this.$route.meta.layout === 'empty') {
-      document.body.style.background = '#2d3a4b'
-    }
   }
+  // mounted() {
+  //   console.log(this.$route.meta.layout)
+  //   if (this.$route.meta.layout === 'empty') {
+  //     document.body.style.background = '#2d3a4b'
+  //   }
+  // }
 }
 </script>
 
 <style lang="scss">
+.auth-wrapper {
+  display: flex;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin-left: -48%;
+    background-image: url('@/assets/login-bg.svg');
+    background-repeat: no-repeat;
+    background-position: 100%;
+    background-size: auto 100%;
+  }
+}
+
+.auth-wrapper {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.auth-left {
+  width: 50%;
+}
+
+
+.auth-right {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .app-auth {
-  margin: 0 auto;
-  max-width: 400px;
-  position: relative;
-  top: 200px;
+  margin-top: -120px;
+  max-width: 480px;
+  width: 100%;
 
   &__header {
-
   }
 
   &__title {
     font-size: 26px;
-    color: #eee;
-    margin: 0 auto 40px auto;
-    text-align: center;
+    // color: #eee;
+    margin: 0 auto 20px auto;
+    // text-align: left;
     font-weight: 700;
   }
 
   &__content {
-
   }
 }
 
@@ -116,11 +160,19 @@ export default {
 
 .auth-form__fieldset {
   padding: 0;
-  // border: none;
   margin-bottom: 22px;
-  border: 1px solid hsla(0,0%,100%,.1);
-background: rgba(0,0,0,.1);
-border-radius: 5px;
+  // border: 1px solid hsla(0, 0%, 100%, 0.1);
+  // background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  border: none;
+  box-shadow: none;
+
+  &:focus-visible,
+  &:focus,
+  &:hover {
+    border: none;
+     box-shadow: none;
+  }
 }
 
 .auth-form__btn {
@@ -135,45 +187,52 @@ border-radius: 5px;
   text-align: center;
   box-sizing: border-box;
   outline: none;
-  transition: .1s;
+  transition: 0.1s;
   font-weight: 600;
   user-select: none;
   vertical-align: middle;
   -webkit-appearance: none;
-  background-color: #409EFF;
+  background-color: #41b883;
   border: var(--el-border);
-  border-color: #409EFF;
+  border-color: #41b883;
   padding: 8px 15px;
   font-size: 15px;
   border-radius: 4px;
   // margin-top: 20px;
   width: 100%;
-  height: 38px;
+  height: 44px;
 }
 
 .text-field {
   padding: 0;
   position: relative;
 
+
   &__inner {
     height: 40px;
     // width: 85%;
     width: 100%;
     border-radius: 4px;
-    background: transparent;
-    border: 0;
-    border-top-color: currentcolor;
-    border-right-color: currentcolor;
-    border-bottom-color: currentcolor;
-    border-left-color: currentcolor;
-    -webkit-appearance: none;
-    border-radius: 0;
+    outline: none;
+    // background: transparent;
+    // border: none;
+    // border-top-color: currentcolor;
+    // border-right-color: currentcolor;
+    // border-bottom-color: currentcolor;
+    // border-left-color: currentcolor;
+    // -webkit-appearance: none;
+    // box-shadow: none;
     padding: 12px 40px 12px 40px;
-    color: #fff;
+    // color: #fff;
     height: 47px;
-    caret-color: #fff;
+    // caret-color: #fff;
+      border: 1px solid #EBEEF5;
 
-    &:focus {}
+    &:focus,
+    &:hover {
+      border: 1px solid #41b883;
+      box-shadow: none;
+    }
   }
 
   &__preffix {
@@ -198,6 +257,4 @@ border-radius: 5px;
     line-height: 36px;
   }
 }
-
-
 </style>

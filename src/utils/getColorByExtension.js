@@ -6,7 +6,8 @@ const extColor = {
   png: "orange",
   jpg: "orange",
   jpeg: "orange",
-  zip: "red"
+  zip: "red",
+  svg: "coral"
 }
 
 export const getColorByExtension = ext => extColor[ext]

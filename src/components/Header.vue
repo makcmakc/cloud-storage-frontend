@@ -11,10 +11,45 @@
           </div>
         </router-link>
 
-        <div class="app-settings" ref="settings">
-          <router-link to="/auth">
-            <cogIcon style="font-size: 1.4em; margin-top: 6px;"  @click="isOpen = !isOpen" />
+        <div class="app-settings" style="display: flex; align-items: center; gap: 10px">
+
+          <!-- <div class="app-header__storage">
+            <infoFilled style="font-size: 1.5em;" />
+          </div> -->
+
+          <Popper arrow :offsetDistance="[12, -122]">
+            <div class="app-header__profile">
+              <profileCircle style="font-size: 1.5em;" />
+            </div>
+            <template #content>
+              <div class="profile-popover">
+                <div class="profile-popover__body">
+                  <p>
+                    ID: <strong>{{userData.id}}</strong>
+                  </p>
+                  <p>
+                    Полное имя: <strong>{{userData.fullName}}</strong>
+                  </p>
+                  <p>
+                    E-Mail: <strong>{{userData.email}}</strong>
+                  </p>
+                </div>
+                <div class="profile-popover__footer">
+                  
+                </div>
+              </div>
+            </template>
+          </Popper>
+          <!-- <router-link to="/profile">
+            Profile
           </router-link>
+          <router-link to="/auth">
+            Login
+          </router-link>
+          <router-link to="/auth">
+            Register
+          </router-link> -->
+
         </div>
       </div>
 
@@ -37,10 +72,28 @@
 import appleIcloud from '~icons/mdi/apple-icloud';
 import cogIcon from '~icons/mdi/cog';
 import closeIcon from '~icons/mdi/close';
-import { onMounted, onUnmounted, ref } from 'vue';
+import profileCircle from '~icons/iconoir/profile-circle';
+import infoFilled from '~icons/ep/info-filled';
 
-  let isOpen = ref(false)
+import Popper from "vue3-popper";
 
+
+</script>
+
+
+<script>
+import * as Api from '@/api'
+
+export default {
+  data() {
+    return {
+      userData: {}
+    }
+  },
+  async mounted() {
+    this.userData =  await Api.auth.getMe();
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -49,6 +102,8 @@ header {
   width: 100%;
   background: #f4f6f9;
 }
+
+
 
 .app-header {
   display: flex;

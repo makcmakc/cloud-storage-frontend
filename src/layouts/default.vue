@@ -14,6 +14,9 @@
             <div class="client-listing__heading">
               <h1 class="client-listing__heading-title">{{ this.$route.meta.title }}</h1>
             </div>
+
+            <Files />
+
             <div class="client-listing__settings" v-if="this.$route.meta.title !== 'Корзина'">
               <span class="settings-by-sort" >
                 <button class="btn btn--icon">
@@ -38,10 +41,10 @@
           </div>
 
           <Suspense>
-              <RouterView />
-              <template #fallback>
-                Loading...
-              </template>
+            <RouterView />
+            <template #fallback>
+              Loading...
+            </template>
           </Suspense>
         </div>
 
@@ -74,6 +77,8 @@ import appsIcon from '~icons/mdi/apps';
 import chevronDown from '~icons/mdi/chevron-down';
 import Aside from '@/components/Aside.vue'
 
+import Files from '@/components/Files.vue'
+
 import { ref } from 'vue';
 
 </script>
@@ -89,6 +94,7 @@ export default {
   data() {
     return {
       dragContainer: document.querySelector('.container'),
+      selectedIds: []
     }
   },
   methods: {
@@ -100,9 +106,27 @@ export default {
       e.afterAdded.forEach(el => el.classList.add('selected'))
       e.afterRemoved.forEach(el => el.classList.remove('selected'))
     },
+
+
+    onFileSelect(id, type) {
+      if (type === "select") {
+        // setSelectedIds((prev) => [...prev, id]);
+        // console.log(id)
+        this.selectedIds.push(id)
+        console.log(this.selectedIds)
+      }
+    },
+
     onSelect(e) {
-      e.added.forEach(el => el.classList.add('active'))
-      e.removed.forEach(el => el.classList.remove('active'))
+      console.log('Select', e)
+      e.added.forEach(el => {
+        el.classList.add('active')
+        this.onFileSelect(Number(el.dataset["id"]), "select")
+      })
+      e.removed.forEach(el => {
+        el.classList.remove('active')
+        this.onFileSelect(Number(el.dataset["id"]), "unselect");
+      })
     },
     // onKeydown() {
     //   document.querySelector('.button').classList.add('selected')
