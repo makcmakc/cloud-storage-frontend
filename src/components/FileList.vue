@@ -2,9 +2,9 @@
   <div class="list-item">
     <div class="list-item__icon">
       <i class="list-item__ext" :class="color">{{ ext }}</i>
-      <img v-if="isImage(ext)" :src="imageUrl" class="list-item__img" :alt="item.originalName">
+      <!-- <img v-if="isImage(ext)" :src="imageUrl" class="list-item__img" :alt="item.originalName">
       <filePdfOutlined v-else-if="ext === 'pdf'" />
-      <fileDocumentOutline v-else />
+      <fileDocumentOutline v-else /> -->
     </div>
     <div class="list-item__info">
       <div class="list-item__name">

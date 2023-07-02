@@ -2,103 +2,63 @@
   <div class="wrapper">
 
     <div class="auth-wrapper">
-      <div class="auth-left"></div>
-
-      <div class="auth-right">
-        <div class="app-auth">
-          <div class="app-auth__header">
-            <h3 class="app-auth__title">Sign In</h3>
-          </div>
-
-          <div class="app-auth__content">
-            <form class="auth-form" @submit.prevent="submitHandler">
-              <div class="auth-form__fieldset">
-                <div class="text-field">
-                  <span class="text-field__preffix">
-                    <accountIcon />
-                  </span>
-                  <input v-model="email" class="text-field__inner" placeholder="E-mail" />
-                </div>
-              </div>
-
-              <div class="auth-form__fieldset">
-                <div class="text-field">
-                  <span class="text-field__preffix">
-                    <lockIcon />
-                  </span>
-                  <input v-model="password" :type="passwordVisiblity ? 'text' : 'password'" class="text-field__inner" placeholder="Password" />
-                  <span class="text-field__suffix" @click="passwordVisiblity = !passwordVisiblity">
-                    <eyeIcon v-if="!passwordVisiblity" />
-                    <eyeOff v-else />
-                  </span>
-                </div>
-              </div>
-
-              <button class="auth-form__btn">Sign In</button>
-            </form>
-          </div>
+      <div class="auth-wrapper__left">
+        <div class="auth-img">
+          <!-- <img src="@/assets/cloud.svg" alt=""> -->
         </div>
+        <div class="auth-desc">
+          The VCloud is the ultimate tool for managing all of your files in one central location.
+        </div>
+      </div>
+
+      <div class="auth-wrapper__right">
+        <template v-if="authType === '__SIGNIN__'">
+          <LoginForm @auth-type="updateType" />
+        </template>
+
+        <template v-if="authType === '__SIGNUP__'">
+          <RegisterForm @auth-type="updateType" />
+        </template>
       </div>
 
     </div>
   </div>
 </template>
 
-<script>
-import accountIcon from '~icons/mdi/account'
-import lockIcon from '~icons/mdi/lock'
-import eyeIcon from '~icons/mdi/eye'
-import eyeLock from '~icons/mdi/eye-lock'
-import eyeOff from '~icons/mdi/eye-off';
+<script setup>
+import LoginForm from '@/components/auth/LoginForm.vue'
+import RegisterForm from '@/components/auth/RegisterForm.vue'
+import { ref, reactive } from 'vue'
 
-import * as Api from '@/api'
-import { setCookie } from 'nookies'
+let authType = ref('__SIGNIN__')
 
-export default {
-  name: 'auth',
-  components: {
-    accountIcon,
-    lockIcon,
-    eyeIcon,
-    eyeLock,
-    eyeOff
-  },
-  data() {
-    return {
-      passwordVisiblity: false,
-      password: null,
-      email: null
-    }
-  },
-  methods: {
-    async submitHandler() {
-      const data = {
-        email: this.email,
-        password: this.password
-      }
-      try {
-        const { token } = await Api.auth.login(data)
-
-        setCookie(null, '_token', token, { path: '/' })
-
-        this.$router.push('/')
-      } catch (err) {
-        console.log(err)
-      }
-    }
-  }
-  // mounted() {
-  //   console.log(this.$route.meta.layout)
-  //   if (this.$route.meta.layout === 'empty') {
-  //     document.body.style.background = '#2d3a4b'
-  //   }
-  // }
-}
+const updateType = type => authType.value = type
 </script>
 
 <style lang="scss">
 .auth-wrapper {
   display: flex;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+
+  &__left {
+    width: 50%;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__right {
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 
   &::before {
     content: '';
@@ -115,23 +75,21 @@ export default {
   }
 }
 
-.auth-wrapper {
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
-}
+.auth {
+  &-img {
+    margin-top: -200px;
+    img {
+      width: 400px;
+    }
+  }
 
-.auth-left {
-  width: 50%;
-}
-
-
-.auth-right {
-  width: 50%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  &-desc {
+    width: 50%;
+    color: #fff;
+    font-size: 1.575rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+  }
 }
 
 .app-auth {
@@ -152,27 +110,54 @@ export default {
 
   &__content {
   }
+
+  &__signup {
+    margin-top: 20px;
+    text-align: right;
+
+    button {
+      padding: 8px 20px;
+      border: 1px solid #ccc;
+      background: none;
+      display: inline-block;
+      cursor: pointer;
+      width: 100%;
+      height: 44px;
+      transition: all .15s;
+
+      &:hover {
+        border-color: #41b883;
+        color: #41b883;
+        transition: all .15s;
+      }
+    }
+  }
+
+  .line {
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-column-gap: 1.2rem;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #606266;
+
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      height: 1px;
+      background-color: #DCDFE6;
+    }
+  }
 }
 
-.auth-form {
-  // border: 1px solid #EBEEF5;
-}
 
 .auth-form__fieldset {
   padding: 0;
   margin-bottom: 22px;
-  // border: 1px solid hsla(0, 0%, 100%, 0.1);
-  // background: rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   border: none;
-  box-shadow: none;
-
-  &:focus-visible,
-  &:focus,
-  &:hover {
-    border: none;
-     box-shadow: none;
-  }
 }
 
 .auth-form__btn {
@@ -180,7 +165,6 @@ export default {
   justify-content: center;
   align-items: center;
   line-height: 1;
-  // height: 47px;
   white-space: nowrap;
   cursor: pointer;
   color: #fff;

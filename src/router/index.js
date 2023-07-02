@@ -5,7 +5,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: to => {
+      redirect: () => {
         return 'files'
       }
     },
@@ -44,23 +44,7 @@ const router = createRouter({
       meta: {
         layout: 'empty',
       }
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/register.vue'),
-      meta: {
-        layout: 'empty',
-      }
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('../views/profile.vue'),
-      meta: {
-        layout: 'empty',
-      }
-    }         
+    },       
   ]
 })
 

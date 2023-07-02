@@ -30,17 +30,10 @@ const uploadFile = async ($event) => {
 
     console.log(file)
 
-    if (file !== undefined) await Api.files.uploadFile(file)
-    // await Api.files.uploadFile(file)
-
-    // if (target && target.files) {
-    //   file.value = target.files[0];
-
-    //   // await Api.files.uploadFile(file.value)
-    //   console.log(file.value)
-    // }
-
-
+    if (file !== undefined) {
+      await Api.files.uploadFile(file)
+      window.location.reload()
+    }
   } catch (error) {
     console.log(error)
   }

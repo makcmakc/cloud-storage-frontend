@@ -1,153 +1,131 @@
 <template>
   <div class="client-listing">
-
     <div class="client-listing__container">
-      <div class="container">
-        <div class="list__items list--theme-tile">
-          
-          <div v-for="item in listItems" :key="item.id" class="file">
-            <FileCard :item="item" :data-id="item.id" />
-          </div>
-
-        </div>
+      <div class="list__items list--theme-tile">
+        <FileCard v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id"  @contextmenu.prevent.stop="handleContextMenu($event, item)" />
       </div>
     </div>
 
+
+    <div class="context-menu" ref="contextMenu" v-if="contextMenuVisibile" :style="{'top': y, 'left': x}">
+      <ul class="context-menu__list">
+        <li class="context-menu__item">
+          <button class="context-menu__button">
+            <linkBold />
+            <span>Поделиться</span>
+          </button>
+        </li>
+      </ul>          
+      <ul class="context-menu__list">
+        <li class="context-menu__item">
+          <button class="context-menu__button">
+            <photoAlbumFill />
+
+            <span>Добавить в альбом</span>
+          </button>
+        </li>
+        <li class="context-menu__item">
+          <button class="context-menu__button">
+            <starIcon />
+
+            <span>Добавить в избранное</span>
+          </button>
+        </li>            
+      </ul>
+      <ul class="context-menu__list">
+        <li class="context-menu__item">
+          <button class="context-menu__button">
+            <downloadIcon />
+
+            <span>Скачать</span>
+          </button>
+        </li>
+
+        <li class="context-menu__item">
+          <button class="context-menu__button">
+            <renameIcon />
+
+            <span>Переименовать</span>
+          </button>
+        </li>
+        <li class="context-menu__item">
+          <button class="context-menu__button">
+            <fileTransferFill />
+
+            <span>Переместить </span>
+          </button>
+        </li>
+      </ul>
+      <ul class="context-menu__list">
+        <li class="context-menu__item">
+          <button class="context-menu__button">
+            <baselineDelete />
+            <span>Удалить</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+    
   </div>
 </template>
 
 
+
+<script >
+export default {
+  data() {
+    return {
+      contextMenuVisibile: false,
+      x: 0,
+      y: 0
+    }
+  },
+  methods: {
+     handleContextMenu (event, item) {
+      //  this.contextMenuVisibile = !this.contextMenuVisibile
+      this.contextMenuVisibile = true
+      this.y = event.clientY + 10 + 'px'
+      this.x = event.clientX + 10 + 'px'
+
+      document.body.addEventListener('click', (e) => {
+        console.log('REF s', this.$refs.contextMenu, e.target.offsetParent)
+
+        if (e.target.offsetParent !== this.$refs.contextMenu) {
+          this.contextMenuVisibile = true
+        }
+        this.contextMenuVisibile = false
+      })
+    },
+    handleDelete(e) {
+      console.log(e)
+    }
+  }
+}
+
+</script>
+
 <script setup>
-import FileCard from '@/components/FileCard.vue';
+import FileCard from '@/components/FileCard.vue'
+
+
+import baselineDelete from '~icons/ic/baseline-delete';
+import downloadIcon from '~icons/material-symbols/download';
+import renameIcon from '~icons/mdi/rename';
+import photoAlbumFill from '~icons/mingcute/photo-album-fill';
+import fileTransfer from '~icons/mdi/file-transfer';
+import fileTransferFill from '~icons/ri/file-transfer-fill';
+import shareIcon from '~icons/material-symbols/share';
+import linkBold from '~icons/solar/link-bold';
+import starIcon from '~icons/material-symbols/star';
 
 import * as Api from '@/api'
 import { ref } from 'vue'
 
 let listItems = ref(await Api.files.getAll())
-
 </script>
 
 
+
+
 <style lang="scss">
-.list {
-  &__items {
-    position: relative;
-    gap: 5px;
-  }
-
-  &-item {
-    max-width: 150px;
-    height: 180px;
-    padding: 12px;
-    border-radius: 8px;
-
-    align-items: center;
-    flex-direction: column;
-    position: relative;
-    display: flex;
-    flex-shrink: 0;
-    color: var(--color-mg-typo-primary);
-    font-size: 13px;
-    line-height: 22px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
-
-    &:hover,
-    &.active,
-    &.selected {
-      background: #f5f5f5;
-    }
-
-    &.selected:hover {
-      background: #EBEEF5;
-    }
-
-    &__icon {
-      width: 120px;
-      height: 120px;
-      align-items: flex-end;
-      position: relative;
-      display: flex;
-      order: 0;
-      flex-shrink: 0;
-      justify-content: center;
-
-      img {
-        max-height: 120px;
-        max-width: 120px;
-        box-sizing: border-box;
-        display: block;
-      }
-
-      svg {
-        width: 60%;
-        height: 100%;
-      }
-    }
-
-    &__info {
-      display: flex;
-      flex-grow: 1;
-      align-items: center;
-      padding-left: 20px;
-      overflow: hidden;
-      padding: 0;
-      height: 40px;
-      justify-content: center;
-      align-items: flex-end;
-      order: 1;
-    }
-
-    &__name {
-      height: 30px;
-      word-break: break-all;
-      line-height: 14px;
-      text-align: center;
-      width: 100%;
-
-
-      span {
-        display: inline-block;
-        word-break: break-all;
-        white-space: pre-line;
-        max-width: 90px;
-        text-overflow: ellipsis;
-      }
-    }
-
-    &__ext {
-      font-style: normal;
-      font-size: 12px;
-      font-weight: bold;
-      color: #fff;
-      position: absolute;
-      bottom: 0px;
-      left: 0px;
-      text-transform: uppercase;
-      background-color: #777;
-      padding: 3px 6px;
-      border-radius: 4px;
-
-      &.orange {
-        background-color: orange;
-      }
-
-      &.purple {
-        background-color: purple;
-      }
-
-      &.coral {
-        background-color: coral;
-      }
-    }
-  }
-}
-
-.list--theme-tile {
-  display: flex;
-  width: 100%;
-}
 </style>

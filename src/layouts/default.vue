@@ -15,8 +15,6 @@
               <h1 class="client-listing__heading-title">{{ this.$route.meta.title }}</h1>
             </div>
 
-            <Files />
-
             <div class="client-listing__settings" v-if="this.$route.meta.title !== 'Корзина'">
               <span class="settings-by-sort" >
                 <button class="btn btn--icon">
@@ -76,11 +74,6 @@ import formatListBulleted from '~icons/mdi/format-list-bulleted';
 import appsIcon from '~icons/mdi/apps';
 import chevronDown from '~icons/mdi/chevron-down';
 import Aside from '@/components/Aside.vue'
-
-import Files from '@/components/Files.vue'
-
-import { ref } from 'vue';
-
 </script>
 
 <script>
