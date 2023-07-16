@@ -13,33 +13,35 @@
 
         <div class="app-settings" style="display: flex; align-items: center; gap: 10px">
 
-          <!-- <div class="app-header__storage">
-            <infoFilled style="font-size: 1.5em;" />
-          </div> -->
-
-          <Popper arrow :offsetDistance="[12, -122]">
             <div class="app-header__profile">
-              <profileCircle style="font-size: 1.5em;" />
+              <n-popover
+                placement="bottom"
+                trigger="hover"
+                @update:show="handleUpdateShow"
+              >
+                <template #trigger>
+                  <profileCircle style="font-size: 1.5em;" />
+                </template>
+
+                <div class="profile-popover">
+                  <div class="profile-popover__body">
+                    <p>
+                      ID: <strong>{{userData.id}}</strong>
+                    </p>
+                    <p>
+                      Полное имя: <strong>{{userData.fullName}}</strong>
+                    </p>
+                    <p>
+                      E-Mail: <strong>{{userData.email}}</strong>
+                    </p>
+                  </div>
+                  <div class="profile-popover__footer">
+                    
+                  </div>
+                </div>
+              </n-popover>
             </div>
-            <template #content>
-              <div class="profile-popover">
-                <div class="profile-popover__body">
-                  <p>
-                    ID: <strong>{{userData.id}}</strong>
-                  </p>
-                  <p>
-                    Полное имя: <strong>{{userData.fullName}}</strong>
-                  </p>
-                  <p>
-                    E-Mail: <strong>{{userData.email}}</strong>
-                  </p>
-                </div>
-                <div class="profile-popover__footer">
-                  
-                </div>
-              </div>
-            </template>
-          </Popper>
+
           <!-- <router-link to="/profile">
             Profile
           </router-link>
@@ -74,9 +76,6 @@ import cogIcon from '~icons/mdi/cog';
 import closeIcon from '~icons/mdi/close';
 import profileCircle from '~icons/iconoir/profile-circle';
 import infoFilled from '~icons/ep/info-filled';
-
-import Popper from "vue3-popper";
-
 
 </script>
 

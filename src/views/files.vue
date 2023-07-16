@@ -1,8 +1,11 @@
 <template>
   <div class="client-listing">
     <div class="client-listing__container">
-      <div class="list__items list--theme-tile">
+      <!-- <div class="list__items list--theme-tile">
         <FileCard v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id"  @contextmenu.prevent.stop="handleContextMenu($event, item)" />
+      </div> -->
+      <div class="list__items list--theme-list">
+        <FileList v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id" />
       </div>
     </div>
 

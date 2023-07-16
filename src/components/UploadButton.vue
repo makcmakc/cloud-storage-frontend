@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn--upload">
+  <!-- <button class="btn btn--upload">
     <i class="btn-icon"><cloudUploadOutline /></i>
     <div class="upload-button__attach-wrapper">
       <input
@@ -11,7 +11,25 @@
       />
     </div>
     <span>Загрузить файл</span>
-  </button>
+  </button> -->
+      <n-upload
+        action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
+        :headers="{
+          'naive-info': 'hello!'
+        }"
+        :data="{
+          'naive-data': 'cool! naive!'
+        }"
+      >
+        <n-button icon-placement="left" size="large" type="primary" style="width: 100%">
+          <template #icon>
+            <n-icon>
+              <cloudUploadOutline />
+            </n-icon>
+          </template>
+         Загрузить файл
+        </n-button>
+      </n-upload>
 </template>
 
 
@@ -42,6 +60,11 @@ const uploadFile = async ($event) => {
 
 
 <style lang="scss" scoped>
+
+.n-button,
+.n-upload-trigger {
+  width: 100% !important;
+}
 
 .btn {
   position: relative;
