@@ -5,7 +5,8 @@
         <FileCard v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id"  @contextmenu.prevent.stop="handleContextMenu($event, item)" />
       </div> -->
       <div class="list__items list--theme-list">
-        <FileList v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id" />
+        <!-- <FileList v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id" /> -->
+        <FileCard v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id" />
       </div>
     </div>
 
@@ -124,7 +125,37 @@ import starIcon from '~icons/material-symbols/star';
 import * as Api from '@/api'
 import { ref } from 'vue'
 
-let listItems = ref(await Api.files.getAll())
+// let listItems = ref(await Api.files.getAll())
+
+let listItems = [
+  {
+    id: 1,
+    filename: 'Cara Develigne',
+    originalName: 'cara-develigne',
+    size: 2049,
+    mimetype: 'jpeg',
+    user: 'maxi',
+    deletedAt: '10-10-2023'
+  },
+  {
+    id: 2,
+    filename: 'Cara Develigne',
+    originalName: 'cara-develigne',
+    size: 2049,
+    mimetype: 'jpeg',
+    user: 'maxi',
+    deletedAt: '10-10-2023'
+  },
+  {
+    id: 3,
+    filename: 'Cara Develigne',
+    originalName: 'cara-develigne',
+    size: 2049,
+    mimetype: 'jpeg',
+    user: 'maxi',
+    deletedAt: '10-10-2023'
+  }  
+]
 </script>
 
 

@@ -7,51 +7,50 @@
     <div class="app-auth__content">
       <form class="auth-form" @submit.prevent="handleSignIn">
         <div class="auth-form__fieldset">
-          <div class="text-field">
-            <span class="text-field__preffix">
+          <n-input size="large" v-model="email" placeholder="E-mail">
+            <template #prefix>
+              <!-- <n-icon :component="baselineEmail" /> -->
               <baselineEmail />
-            </span>
-            <input v-model="email" class="text-field__inner" placeholder="E-mail" />
-          </div>
+            </template>
+          </n-input>
         </div>
 
         <div class="auth-form__fieldset">
-          <div class="text-field">
-            <span class="text-field__preffix">
+          <n-input
+            type="password"
+            show-password-on="mousedown"
+            placeholder="Password"
+            size="large"
+            v-model="password"
+          >
+            <template #prefix>
               <lockIcon />
-            </span>
-            <input
-              v-model="password"
-              :type="passwordVisiblity ? 'text' : 'password'"
-              class="text-field__inner"
-              placeholder="Password"
-            />
-            <span class="text-field__suffix" @click="passwordVisiblity = !passwordVisiblity">
-              <eyeIcon v-if="!passwordVisiblity" />
-              <eyeOff v-else />
-            </span>
-          </div>
+            </template>
+          </n-input>
         </div>
 
-        <button type="submit" class="auth-form__btn">Sign In</button>
+        <n-button type="primary" size="large" class="auth-form__btn">Sign In</n-button>
       </form>
     </div>
 
     <div class="app-auth__footer">
-      <span class="line">OR</span>
+      <!-- <span class="line">OR</span> -->
+      <n-divider>OR</n-divider>
 
       <div class="app-auth__signup" @click="this.$emit('auth-type', '__SIGNUP__')">
-        <button>Sign Up</button>
+        <n-button size="large">Sign Up</n-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import lockIcon from '~icons/mdi/lock';
-import eyeIcon from '~icons/mdi/eye';
-import eyeOff from '~icons/mdi/eye-off';
-import baselineEmail from '~icons/ic/baseline-email';
+import lockIcon from '~icons/mdi/lock'
+import eyeIcon from '~icons/mdi/eye'
+import eyeOff from '~icons/mdi/eye-off'
+import baselineEmail from '~icons/ic/baseline-email'
+
+// import { EmailFilled } from '~vicons/ionicons5'
 
 import * as Api from '@/api'
 import { setCookie } from 'nookies'
@@ -62,13 +61,14 @@ export default {
     lockIcon,
     eyeIcon,
     eyeOff,
-    baselineEmail
+    baselineEmail,
+    // EmailFilled
   },
   data() {
     return {
       passwordVisiblity: false,
       password: null,
-      email: null,
+      email: null
     }
   },
   methods: {
@@ -87,9 +87,7 @@ export default {
         console.log(err)
       }
     },
-    check() {
-      
-    }
+    check() {}
   }
 }
 </script>

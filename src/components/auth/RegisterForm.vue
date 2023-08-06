@@ -7,50 +7,52 @@
     <div class="app-auth__content">
       <form class="auth-form" @submit.prevent="handleSignUp">
         <fieldset class="auth-form__fieldset">
-          <div class="text-field">
-            <span class="text-field__preffix">
+          <n-input
+            size="large"
+            placeholder="E-mail"
+          >
+            <template #prefix>
+              <!-- <n-icon :component="baselineEmail" /> -->
               <baselineEmail />
-            </span>
-            <input v-model="email" class="text-field__inner" placeholder="E-mail" />
-          </div>
+            </template>
+          </n-input>
         </fieldset>
 
         <fieldset class="auth-form__fieldset">
-          <div class="text-field">
-            <span class="text-field__preffix">
-              <accountIcon />
-            </span>
-            <input v-model="fullName" class="text-field__inner" placeholder="Full Name" />
-          </div>
+          <n-input
+            size="large"
+            placeholder="Full name"
+          >
+            <template #prefix>
+              <baselinePerson />
+            </template>
+          </n-input>
         </fieldset>
 
         <fieldset class="auth-form__fieldset">
-          <div class="text-field">
-            <span class="text-field__preffix">
+          <n-input
+            type="password"
+            show-password-on="mousedown"
+            placeholder="Password"
+            :maxlength="8"
+            size="large"
+          >
+            <template #prefix>
               <lockIcon />
-            </span>
-            <input
-              v-model="password"
-              :type="passwordVisiblity ? 'text' : 'password'"
-              class="text-field__inner"
-              placeholder="Password"
-            />
-            <span class="text-field__suffix" @click="passwordVisiblity = !passwordVisiblity">
-              <eyeIcon v-if="!passwordVisiblity" />
-              <eyeOff v-else />
-            </span>
-          </div>
+            </template>
+          </n-input>
         </fieldset>
 
-        <button class="auth-form__btn">Sign Up</button>
+        <n-button type="primary" size="large" class="auth-form__btn">Sign Up</n-button>
       </form>
     </div>
 
     <div class="app-auth__footer">
-      <span class="line">OR</span>
+      <!-- <span class="line">OR</span> -->
+      <n-divider>OR</n-divider>
 
       <div class="app-auth__signup" @click="this.$emit('auth-type', '__SIGNIN__')">
-        <button>Sign In</button>
+        <n-button size="large">Sign In</n-button>
       </div>
     </div>
   </div>
@@ -61,6 +63,7 @@ import accountIcon from '~icons/mdi/account';
 import lockIcon from '~icons/mdi/lock';
 import eyeIcon from '~icons/mdi/eye';
 import eyeOff from '~icons/mdi/eye-off';
+import baselinePerson from '~icons/ic/baseline-person';
 import baselineEmail from '~icons/ic/baseline-email';
 
 import * as Api from '@/api'
@@ -74,7 +77,8 @@ export default {
     lockIcon,
     eyeIcon,
     eyeOff,
-    baselineEmail
+    baselineEmail,
+    baselinePerson
   },
   data() {
     return {
