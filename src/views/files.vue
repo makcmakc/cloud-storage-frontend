@@ -1,10 +1,11 @@
 <template>
   <div class="client-listing">
     <div class="client-listing__container">
+      {{ viewStore.sort }} - {{ viewStore.view }}
       <!-- <div class="list__items list--theme-tile">
         <FileCard v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id"  @contextmenu.prevent.stop="handleContextMenu($event, item)" />
       </div> -->
-      <div class="list__items list--theme-list">
+      <div class="list-items" :class="viewClass">
         <!-- <FileList v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id" /> -->
         <FileCard v-for="item in listItems" :key="item.id" :item="item" :data-id="item.id" />
       </div>
@@ -84,6 +85,7 @@ export default {
       y: 0
     }
   },
+
   methods: {
      handleContextMenu (event, item) {
       //  this.contextMenuVisibile = !this.contextMenuVisibile
@@ -111,7 +113,6 @@ export default {
 <script setup>
 import FileCard from '@/components/FileCard.vue'
 
-
 import baselineDelete from '~icons/ic/baseline-delete';
 import downloadIcon from '~icons/material-symbols/download';
 import renameIcon from '~icons/mdi/rename';
@@ -123,9 +124,19 @@ import linkBold from '~icons/solar/link-bold';
 import starIcon from '~icons/material-symbols/star';
 
 import * as Api from '@/api'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useViewStore } from '../stores/view'
 
 // let listItems = ref(await Api.files.getAll())
+
+
+const viewStore = useViewStore()
+
+const viewClass = computed(() => {
+  return  viewStore.view === 'by-tile' ? 'list-items--by-tile' : 'list-items--by-list'
+})
+
+// const sortingBySize = listItems.sort((a, b) => a.size - b.size)
 
 let listItems = [
   {
@@ -133,7 +144,7 @@ let listItems = [
     filename: 'Cara Develigne',
     originalName: 'cara-develigne',
     size: 2049,
-    mimetype: 'jpeg',
+    mimetype: 'pdf',
     user: 'maxi',
     deletedAt: '10-10-2023'
   },
@@ -156,6 +167,22 @@ let listItems = [
     deletedAt: '10-10-2023'
   }  
 ]
+
+const sortedItems = listItems.sort((a, b) => {
+  switch (viewStore.sort) {
+    case 'by-size':
+      return listItems.sort((a, b) => a.size - b.size)
+    case 'by-name':
+      return listItems.sort((a, b) => a.name - b.name)
+    case 'by-date':
+      return listItems.sort((a, b) => a.date - b.date)
+    case 'by-type':
+      return listItems.sort((a, b) => a.type - b.type)      
+    default:
+      return listItems.sort((a, b) => a.name - b.name)
+  }
+
+})
 </script>
 
 

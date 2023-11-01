@@ -10,6 +10,8 @@
       <div class="list-item__name">
         <span>{{ item.originalName }}</span>
       </div>
+      <div v-if="viewIsList" class="list-item__size">{{ item.size }}</div>
+      <div v-if="viewIsList" class="list-item__type">{{ item.mimetype }}</div>
     </div>
   </div>
 </template>
@@ -20,10 +22,17 @@ import filePdfOutlined from '~icons/ant-design/file-pdf-outlined';
 import fileDocumentOutline from '~icons/mdi/file-document-outline';
 
 
-import { defineProps, ref, toRefs } from "vue"
+import { computed, ref, toRefs } from "vue"
 import { getExtensionFromFileName } from "@/utils/getExtensionFromFileName.js"
 import { isImage } from "@/utils/isImage.js"
 import { getColorByExtension } from "@/utils/getColorByExtension.js"
+import { useViewStore } from '../stores/view';
+
+const viewStore = useViewStore()
+
+const viewIsList = computed(() => {
+  return viewStore.view === 'by-list'
+})
 
 const props = defineProps({ item: Object })
 

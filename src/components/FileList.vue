@@ -18,7 +18,7 @@ import filePdfOutlined from '~icons/ant-design/file-pdf-outlined';
 import fileDocumentOutline from '~icons/mdi/file-document-outline';
 
 
-import { defineProps, onMounted, ref, toRefs } from "vue"
+import { onMounted, ref, toRefs } from "vue"
 import { getExtensionFromFileName } from "@/utils/getExtensionFromFileName.js"
 import { isImage } from "@/utils/isImage.js"
 import { getColorByExtension } from "@/utils/getColorByExtension.js"
@@ -40,47 +40,5 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.list-item--row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  max-width: 100%;
-  height: 50px;
 
-  .list-item__icon {
-    width: 40px;
-    height: 40px;
-    align-items: center;
-
-    img {
-      max-width: 40px;
-      max-height: 40px;
-    }
-  }
-
-  .list-item__ext {
-    display: none;
-  }
-
-  .list-item__size {
-    flex-basis: 120px;
-    text-align: right;
-    display: inline-flex;
-    justify-content: flex-end;
-  }
-
-  .list-item__type {
-    flex-basis: 160px;
-    text-align: right;
-    display: inline-flex;
-    justify-content: flex-end;
-  }
-
-  .list-item__name {
-    width: 100%;
-    height: auto;
-    text-align: left;
-    margin-left: 15px;
-  }
-}
 </style>

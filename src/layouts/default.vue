@@ -18,7 +18,7 @@
 
               <div class="client-listing__settings" v-if="this.$route.meta.title !== 'Корзина'">
                 <span class="settings-by-sort">
-                 <n-dropdown trigger="click" :options="sortSettings" @select="handleSelect">
+                 <n-dropdown trigger="click" :options="sortSettings" @select="handleSortSelect">
                     <n-button icon-placement="right">
                       <template #icon>
                         <n-icon>
@@ -31,7 +31,7 @@
                 </span>
 
                 <span class="settings-by-type">
-                  <n-dropdown trigger="click" :options="viewSettings" @select="handleSelect">
+                  <n-dropdown trigger="click" :options="viewSettings" @select="handleViewSelect">
                     <n-button icon-placement="right">
                       <template #icon>
                         <n-icon>
@@ -85,6 +85,7 @@ import Aside from '@/components/Aside.vue'
 
 <script>
 import { VueSelecto } from 'vue3-selecto'
+import { useViewStore } from '../stores/view'
 
 export default {
   name: 'default',
@@ -122,16 +123,16 @@ export default {
       viewSettings: [
         {
           label: 'Вид',
-          key: 'Marina Bay Sands',
+          key: 'view',
           disabled: true
         },
         {
           label: "Плитка",
-          key: "Brown's Hotel, London"
+          key: "by-tile"
         },
         {
           label: 'Список',
-          key: 'Atlantis Bahamas, Nassau'
+          key: 'by-list'
         },
       ],
     }
@@ -172,6 +173,20 @@ export default {
     // onKeyup() {
     //   document.querySelector('.button').classList.remove('selected')
     // }
+
+    handleSortSelect(e) {
+      const viewStore = useViewStore()
+      viewStore.sort = e
+      console.log('Select by sort : ', e, viewStore.sort)
+
+    },
+
+    handleViewSelect(e) {
+      const viewStore = useViewStore()
+      viewStore.view = e
+      console.log('Select by view : ', e, viewStore.view)
+
+    },
 
     handleView() {
       this.filesView = 'list'

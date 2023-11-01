@@ -48,7 +48,6 @@
     </div>
 
     <div class="app-auth__footer">
-      <!-- <span class="line">OR</span> -->
       <n-divider>OR</n-divider>
 
       <div class="app-auth__signup" @click="this.$emit('auth-type', '__SIGNIN__')">
