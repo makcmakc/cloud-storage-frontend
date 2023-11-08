@@ -1,5 +1,6 @@
 <template>
-  <div class="list-item list-item--row">
+<div>
+  <!-- <div class="list-item list-item--row">
     <div class="list-item__icon">
       <i class="list-item__ext" :class="color">{{ ext }}</i>
       <img v-if="isImage(ext)" :src="imageUrl" class="list-item__img" :alt="item.originalName">
@@ -9,6 +10,14 @@
     <div class="list-item__name">{{ item.originalName }}</div>
     <div class="list-item__size">{{ item.size }}</div>
     <div class="list-item__type">{{ item.mimetype }}</div>
+  </div> -->
+
+  <n-data-table
+    :columns="columns"
+    :data="items"
+    :row-key="rowKey"
+    :bordered="false"
+  />
   </div>
 </template>
 
@@ -23,18 +32,48 @@ import { getExtensionFromFileName } from "@/utils/getExtensionFromFileName.js"
 import { isImage } from "@/utils/isImage.js"
 import { getColorByExtension } from "@/utils/getColorByExtension.js"
 
-const props = defineProps({ item: Object })
+defineProps({ items: Array })
 
-const { item } = toRefs(props)
+const createColumns = () => {
+  return [
+    {
+      type: "selection",
+    },    
+    {
+      title: 'Name',
+      key: 'filename'
+    },
+    {
+      title: 'Original Name',
+      key: 'originalName'
+    },
+    {
+      title: 'Type',
+      key: 'mimetype'
+    },
+    {
+      title: 'Modified',
+      key: 'actions'
+    }
+  ]
+}
 
-const ext = getExtensionFromFileName(item.value.filename);
-const imageUrl = ext && isImage(ext) ? "http://localhost:7777/uploads/" + item.value.filename : ""
-const color = getColorByExtension(ext)
+const columns = createColumns()
+// const data = createData(items)
+const data = ref([])
+const rowKey = (row) => row.id
 
-console.log(item.value)
+
+// const { items } = toRefs(props)
+
+// const ext = getExtensionFromFileName(item.value.filename);
+// const imageUrl = ext && isImage(ext) ? "http://localhost:7777/uploads/" + item.value.filename : ""
+// const color = getColorByExtension(ext)
+
+// console.log(item.value)
 
 onMounted(() => {
-  console.log(localStorage.getItem('VcloudView'))
+  // console.log(props)
 })
 
 </script>

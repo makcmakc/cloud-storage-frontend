@@ -2,7 +2,7 @@ import axios from '@/core/axios'
 
 // types = "all" | "photos" | "trash"
 export const getAll = async (type) => {
-  return (await axios.get('/files?type=' + type)).data
+  // return (await axios.get('/files?type=' + type)).data
 }
 
 export const remove = (ids) => {

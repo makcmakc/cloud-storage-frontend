@@ -21,6 +21,53 @@
 
     <div class="app-aside__info">
       <div class="info-space">
+        <div class="info-space__header">
+          <n-collapse arrow-placement="right">
+            <template #header-extra>
+              <n-icon><sharpAddchart /></n-icon>
+            </template>
+            <n-collapse-item title="Storage">
+              <div class="info-space__details">
+                <div class="info-space__details-category">
+                  <div class="category-title">
+                    <fileIcon />
+                    <span>Documents</span>
+                  </div>
+                  <div class="category-summary">
+                    21.2 MB
+                  </div>                  
+                </div>
+                <div class="info-space__details-category">
+                  <div class="category-title">
+                    <imageMultiple />
+                    <span>Images</span>
+                  </div>
+                  <div class="category-summary">
+                    21.2 MB
+                  </div>                  
+                </div>
+                <div class="info-space__details-category">
+                  <div class="category-title">
+                    <audioIcon />
+                    <span>Audio</span>
+                  </div>
+                  <div class="category-summary">
+                    21.2 MB
+                  </div>
+                </div>
+                <div class="info-space__details-category">
+                  <div class="category-title">
+                    <otherIcon />
+                    <span>Other</span>
+                  </div>
+                  <div class="category-summary">
+                    21.2 MB
+                  </div> 
+                </div>                                        
+              </div>
+            </n-collapse-item>
+          </n-collapse>
+        </div>
         <div class="indicator-bar">
           <div class="indicator-bar__value" :style="'width:' + storageCapacity + '%'"></div>
         </div>
@@ -40,6 +87,10 @@ import UploadButton from '@/components/UploadButton.vue'
 import fileIcon from '~icons/mdi/file'
 import imageMultiple from '~icons/mdi/image-multiple'
 import deleteOutline from '~icons/mdi/delete-outline'
+import chevronRight from '~icons/mdi/chevron-right'
+import sharpAddchart from '~icons/ic/sharp-addchart'
+import audioIcon from '~icons/gridicons/audio'
+import otherIcon from '~icons/icon-park-outline/other'
 </script>
 
 <script>
@@ -86,10 +137,10 @@ export default {
     }
   },
   async mounted() {
-    const files = await Api.files.getAll()
-    const sizes = files.map(el => el.size).reduce((a, b) => a + b, 0)
+    // const files = await Api.files.getAll()
+    // const sizes = files.map(el => el.size).reduce((a, b) => a + b, 0)
 
-    this.filesSize = sizes
+    // this.filesSize = sizes
 
     // console.log('SIZES :',  humanFileSize(sizes, true), sizes)
   },

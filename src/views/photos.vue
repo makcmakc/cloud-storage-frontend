@@ -22,5 +22,5 @@ import FileCard from '@/components/FileCard.vue';
 import * as Api from '@/api'
 import { ref } from 'vue'
 
-let listItems = ref(await Api.files.getAll('photos'))
+// let listItems = ref(await Api.files.getAll('photos'))
 </script>

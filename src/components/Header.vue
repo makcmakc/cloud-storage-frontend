@@ -4,54 +4,59 @@
       <div class="app-header">
         <router-link to="/" class="app-logo">
           <div class="app-logo__icon">
-            <appleIcloud style="font-size: 2em;" />
+            <appleIcloud style="font-size: 2em" />
           </div>
-          <div class="app-logo__title">
-            Cloud Storage
-          </div>
+          <div class="app-logo__title">Cloud Storage</div>
         </router-link>
 
         <div class="app-settings" style="display: flex; align-items: center; gap: 10px">
+          <!-- <div style="">
+          <activityIcon style="font-size: 1.5em;" /> Activity
+          </div> -->
 
-            <div class="app-header__profile">
-              <n-popover
-                placement="bottom"
-                trigger="hover"
-                @update:show="handleUpdateShow"
-              >
-                <template #trigger>
-                  <profileCircle style="font-size: 1.5em;" />
-                </template>
+          <div class="app-header__profile">
+            <n-popover
+              placement="bottom"
+              trigger="hover"
+              @update:show="handleUpdateShow">
+              <template #trigger>
+                <div>
+                  <n-avatar
+                    round
+                    size="small"
+                    src="https://www.kino-teatr.ru/movie/kadr/147388/1035815.jpg"
+                  />
+                  Profile
+                </div>
+              </template>
 
-                <div class="profile-popover">
-                  <div class="profile-popover__body">
-                    <p>
-                      ID: <strong>{{userData.id}}</strong>
-                    </p>
-                    <p>
-                      Полное имя: <strong>{{userData.fullName}}</strong>
-                    </p>
-                    <p>
-                      E-Mail: <strong>{{userData.email}}</strong>
-                    </p>
+              <div class="profile-popover">
+                <div class="profile-popover__head">
+                  <div class="profile-popover__head-avatar">
+                  <n-avatar
+                    round
+                    :size="62"
+                    src="https://www.kino-teatr.ru/movie/kadr/147388/1035815.jpg"
+                  />
                   </div>
-                  <div class="profile-popover__footer">
-                    
+                  <div class="profile-popover__head-info">
+                    <p>Полное имя: <strong>{{ userData.fullName }}</strong></p>
+                    <p>E-Mail: <strong>{{ userData.email }}</strong></p>
+                    <p>ID: <strong>{{ userData.id }}</strong></p>
                   </div>
                 </div>
-              </n-popover>
-            </div>
+                <div class="profile-popover__body">
 
-          <!-- <router-link to="/profile">
-            Profile
-          </router-link>
-          <router-link to="/auth">
-            Login
-          </router-link>
-          <router-link to="/auth">
-            Register
-          </router-link> -->
-
+                </div>
+                <div class="profile-popover__footer">
+                  <div @click="logout" style="display: flex; align-items: center; margin-left: auto; cursor: pointer;">
+                    <span style="margin-right: 5px">Exit</span>
+                    <baselineExitToApp />
+                  </div>
+                </div>
+              </div>
+            </n-popover>
+          </div>
         </div>
       </div>
 
@@ -71,12 +76,13 @@
 </template>
 
 <script setup>
-import appleIcloud from '~icons/mdi/apple-icloud';
-import cogIcon from '~icons/mdi/cog';
-import closeIcon from '~icons/mdi/close';
-import profileCircle from '~icons/iconoir/profile-circle';
-import infoFilled from '~icons/ep/info-filled';
-
+import appleIcloud from '~icons/mdi/apple-icloud'
+import cogIcon from '~icons/mdi/cog'
+import closeIcon from '~icons/mdi/close'
+import profileCircle from '~icons/iconoir/profile-circle'
+import infoFilled from '~icons/ep/info-filled'
+import activityIcon from '~icons/mynaui/activity'
+import baselineExitToApp from '~icons/ic/baseline-exit-to-app';
 </script>
 
 
@@ -90,7 +96,12 @@ export default {
     }
   },
   async mounted() {
-    this.userData =  await Api.auth.getMe();
+    this.userData = await Api.auth.getMe()
+  },
+  methods: {
+    async logout() {
+      await Api.auth.logout()
+    }
   }
 }
 </script>
@@ -99,10 +110,31 @@ export default {
 header {
   margin-bottom: 20px;
   width: 100%;
-  background: #f4f6f9;
+  // background: #f4f6f9;
+  background: #fff;
 }
 
+.profile-popover {
+  width: 250px;
 
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.profile-popover__head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+
+  &-avatar {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+  }
+}
 
 .app-header {
   display: flex;
@@ -152,13 +184,12 @@ header {
   width: auto;
   left: var(--layout-outer-margin);
   right: calc(var(--layout-outer-margin) - 100vw + 100%);
-  border-radius: 0 0 12px 12px;  
+  border-radius: 0 0 12px 12px;
   position: fixed;
   top: 0;
   color: #fff;
   background-color: #222;
-  box-shadow: 0 2px 3px 0 rgba(0,0,0,.15);
-
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.15);
 
   display: flex;
   flex-direction: row;
@@ -166,7 +197,7 @@ header {
   justify-content: space-between;
   font-size: 18px;
   height: 60px;
-  transition: opacity .3s ease;
+  transition: opacity 0.3s ease;
   opacity: 0;
   pointer-events: none;
   z-index: 50;
