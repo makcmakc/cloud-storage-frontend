@@ -10,40 +10,37 @@ const router = createRouter({
       }
     },
     {
-      path: '/files',
-      name: 'files',
-      component: () => import('../views/files.vue'),
-      meta: {
-        title: 'Файлы',
-        layout: 'default',
-      }
+      path: '/client/:route',
+      name: 'client',
+      component: () => import('../views/client.vue'),
+      children: [
+        {
+          path: '/files',
+          name: 'files',
+          component: () => import('../views/files.vue'),
+        },
+        {
+          path: '/photos',
+          name: 'photos',
+          component: () => import('../views/photos.vue'),
+          meta: {
+            title: 'Фото',
+          }
+        },    
+        {
+          path: '/trash',
+          name: 'trash',
+          component: () => import('../views/trash.vue'),
+          meta: {
+            title: 'Корзина',
+          }
+        }        
+      ]
     },
-    {
-      path: '/photos',
-      name: 'photos',
-      component: () => import('../views/photos.vue'),
-      meta: {
-        title: 'Фото',
-        layout: 'default',
-      }
-    },
-    {
-      path: '/trash',
-      name: 'trash',
-      component: () => import('../views/trash.vue'),
-      meta: {
-        title: 'Корзина',
-        layout: 'default'
-      }
-    },
-
     {
       path: '/auth',
       name: 'auth',
-      component: () => import('../views/auth.vue'),
-      meta: {
-        layout: 'empty',
-      }
+      component: () => import('../views/auth.vue')
     },       
   ]
 })

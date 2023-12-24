@@ -10,18 +10,20 @@
           <n-input
             size="large"
             placeholder="E-mail"
+            v-model:value="email"
           >
             <template #prefix>
-              <!-- <n-icon :component="baselineEmail" /> -->
               <baselineEmail />
             </template>
           </n-input>
         </fieldset>
 
         <fieldset class="auth-form__fieldset">
+
           <n-input
             size="large"
             placeholder="Full name"
+            v-model:value="fullName"
           >
             <template #prefix>
               <baselinePerson />
@@ -34,8 +36,8 @@
             type="password"
             show-password-on="mousedown"
             placeholder="Password"
-            :maxlength="8"
             size="large"
+            v-model:value="password"
           >
             <template #prefix>
               <lockIcon />
@@ -43,7 +45,7 @@
           </n-input>
         </fieldset>
 
-        <n-button type="primary" size="large" class="auth-form__btn">Sign Up</n-button>
+        <n-button type="primary" attr-type="submit" size="large" class="auth-form__btn">Sign Up</n-button>
       </form>
     </div>
 
@@ -65,8 +67,10 @@ import eyeOff from '~icons/mdi/eye-off';
 import baselinePerson from '~icons/ic/baseline-person';
 import baselineEmail from '~icons/ic/baseline-email';
 
-import * as Api from '@/api'
-import { setCookie } from 'nookies'
+// import * as Api from '@/api'
+// import { setCookie } from 'nookies'
+import { supabase } from '@/core/supabaseClient'
+// import { useMessage } from 'naive-ui'
 
 
 export default {
@@ -81,30 +85,58 @@ export default {
   },
   data() {
     return {
-      passwordVisiblity: false,
       password: null,
       email: null,
+      fullName: null
     }
   },
   methods: {
-
-    async handleSignUp() {
-      const data = {
-        email: this.email,
-        password: this.password,
-        fullName: this.fullName
-      }
-      try {
-        const { token } = await Api.auth.register(data)
-
-        setCookie(null, "_token", token, { path: "/" })
-
-        this.$router.push('/')
-      } catch(err) {
-        console.log(err)
-      }
-    },
+    // async signUpNewUser() {
+    //   const data = {
+    //     email: this.email,
+    //     password: this.password,
+    //     fullName: this.fullName
+    //   }
+    //   try {
+    //     const { error } = await supabase.auth.signUp(data)
+    //     if (error) message.warning(error)
+    //     this.$router.push('/')
+    //   } catch(err) {
+    //     console.log(err)
+    //   }
+    // },
   },
+}
+</script>
+
+<script setup>
+import { ref } from 'vue'
+import { supabase } from '@/core/supabaseClient'
+// import { useMessage } from 'naive-ui'
+import { useRouter } from 'vue-router'
+
+const loading = ref(false)
+const email = ref('')
+const password = ref('')
+
+// const message = useMessage()
+const router = useRouter()
+
+const handleSignUp = async () => {
+  try {
+    // loading.value = true
+    const { error } = await supabase.auth.signUp({
+      email: email.value,
+      password: password.value,
+    })
+    if (error) message.warning(error)
+    router.push('/')
+  } catch (error) {
+    if (error instanceof Error) message.error(error.message)
+    message.error(error.message)
+  } finally {
+    // loading.value = false
+  }
 }
 </script>
 

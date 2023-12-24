@@ -29,6 +29,8 @@ export default defineComponent({
 
 <template>
     <component :is="layout">
-        <router-view />
+        <!-- <n-message-provider> -->
+            <router-view />
+        <!-- </n-message-provider> -->
     </component>
 </template>

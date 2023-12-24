@@ -142,6 +142,9 @@ export default {
 
     // this.filesSize = sizes
 
+
+
+
     // console.log('SIZES :',  humanFileSize(sizes, true), sizes)
   },
   computed: {

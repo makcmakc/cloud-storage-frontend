@@ -9,18 +9,14 @@
           <div class="app-logo__title">Cloud Storage</div>
         </router-link>
 
-        <div class="app-settings" style="display: flex; align-items: center; gap: 10px">
-          <!-- <div style="">
-          <activityIcon style="font-size: 1.5em;" /> Activity
-          </div> -->
-
+        <div class="app-settings">
           <div class="app-header__profile">
             <n-popover
               placement="bottom"
               trigger="hover"
               @update:show="handleUpdateShow">
               <template #trigger>
-                <div>
+                <div style="display: flex; align-items: center; gap: 10px">
                   <n-avatar
                     round
                     size="small"
@@ -42,7 +38,6 @@
                   <div class="profile-popover__head-info">
                     <p>Полное имя: <strong>{{ userData.fullName }}</strong></p>
                     <p>E-Mail: <strong>{{ userData.email }}</strong></p>
-                    <p>ID: <strong>{{ userData.id }}</strong></p>
                   </div>
                 </div>
                 <div class="profile-popover__body">
@@ -60,7 +55,7 @@
         </div>
       </div>
 
-      <div class="app-action-bar">
+      <!-- <div class="app-action-bar">
         <div class="action-bar__body">
           <div class="action-bar__item">
             <div class="action-bar__item-icon"></div>
@@ -70,7 +65,7 @@
         <div class="action-bar__anchor">
           <closeIcon />
         </div>
-      </div>
+      </div> -->
     </div>
   </header>
 </template>
@@ -83,28 +78,26 @@ import profileCircle from '~icons/iconoir/profile-circle'
 import infoFilled from '~icons/ep/info-filled'
 import activityIcon from '~icons/mynaui/activity'
 import baselineExitToApp from '~icons/ic/baseline-exit-to-app';
-</script>
 
-
-<script>
 import * as Api from '@/api'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-export default {
-  data() {
-    return {
-      userData: {}
-    }
-  },
-  async mounted() {
-    this.userData = await Api.auth.getMe()
-  },
-  methods: {
-    async logout() {
-      await Api.auth.logout()
-    }
-  }
+const userData = ref('')
+const router = useRouter()
+
+const logout = async () => {
+  try {
+    await Api.auth.logout()
+    await router.push('/auth')
+  } catch (err) {}
 }
+
+onMounted(async () => {
+  userData.value = await Api.auth.getMe()
+})
 </script>
+
 
 <style lang="scss" scoped>
 header {

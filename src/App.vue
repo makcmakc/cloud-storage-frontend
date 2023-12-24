@@ -1,3 +1,3 @@
 <template>
-  <TheAppLayout />
+  <router-view />
 </template>
