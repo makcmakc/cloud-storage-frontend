@@ -28,40 +28,49 @@
             </template>
             <n-collapse-item title="Storage">
               <div class="info-space__details">
-                <div class="info-space__details-category">
+                <div class="info-space__details-category" v-if="documentsSize">
                   <div class="category-title">
                     <fileIcon />
                     <span>Documents</span>
                   </div>
                   <div class="category-summary">
-                    21.2 MB
+                    {{ formatFileSize(documentsSize, true) }}
                   </div>                  
                 </div>
-                <div class="info-space__details-category">
+                <div class="info-space__details-category" v-if="imagesSize">
                   <div class="category-title">
                     <imageMultiple />
                     <span>Images</span>
                   </div>
                   <div class="category-summary">
-                    21.2 MB
+                    {{ formatFileSize(imagesSize, true) }}
                   </div>                  
                 </div>
-                <div class="info-space__details-category">
+                <div class="info-space__details-category" v-if="videosSize">
+                  <div class="category-title">
+                    <playBoxMultiple />
+                    <span>Videos</span>
+                  </div>
+                  <div class="category-summary">
+                    {{ formatFileSize(videosSize, true) }}
+                  </div>                  
+                </div>                
+                <div class="info-space__details-category" v-if="audioSize">
                   <div class="category-title">
                     <audioIcon />
                     <span>Audio</span>
                   </div>
                   <div class="category-summary">
-                    21.2 MB
+                    {{ formatFileSize(audioSize, true) }}
                   </div>
                 </div>
-                <div class="info-space__details-category">
+                <div class="info-space__details-category" v-if="otherSize">
                   <div class="category-title">
                     <otherIcon />
                     <span>Other</span>
                   </div>
                   <div class="category-summary">
-                    21.2 MB
+                    {{ formatFileSize(otherSize, true) }}
                   </div> 
                 </div>                                        
               </div>
@@ -73,8 +82,8 @@
         </div>
         <div class="info-space__footer">
           <div class="info-space__text">
-            Свободно {{ humanFileSize(freeSpace, true) }} из
-            {{ humanFileSize(storageVolume, true) }}
+            Свободно {{ formatFileSize(freeSpace, true) }} из
+            {{ formatFileSize(storageVolume, true) }}
           </div>
         </div>
       </div>
@@ -83,7 +92,8 @@
 </template>
 
 <script setup>
-import UploadButton from '@/components/UploadButton.vue'
+import UploadButton from './UploadButton.vue'
+
 import fileIcon from '~icons/mdi/file'
 import imageMultiple from '~icons/mdi/image-multiple'
 import deleteOutline from '~icons/mdi/delete-outline'
@@ -91,72 +101,75 @@ import chevronRight from '~icons/mdi/chevron-right'
 import sharpAddchart from '~icons/ic/sharp-addchart'
 import audioIcon from '~icons/gridicons/audio'
 import otherIcon from '~icons/icon-park-outline/other'
-</script>
-
-<script>
-import * as Api from '@/api'
-
-export default {
-  name: 'aside',
-  data() {
-    return {
-      filesSize: null,
-      storageVolume: 20000000
-    }
-  },
-  methods: {
-    /**
-     * Format bytes as human-readable text.
-     *
-     * @param bytes Number of bytes.
-     * @param si True to use metric (SI) units, aka powers of 1000. False to use
-     *           binary (IEC), aka powers of 1024.
-     * @param dp Number of decimal places to display.
-     *
-     * @return Formatted string.
-     */
-    humanFileSize(bytes, si = false, dp = 1) {
-      const thresh = si ? 1000 : 1024
-
-      if (Math.abs(bytes) < thresh) {
-        return bytes + ' B'
-      }
-
-      const units = si
-        ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-        : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-      let u = -1
-      const r = 10 ** dp
-
-      do {
-        bytes /= thresh
-        ++u
-      } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
-
-      return bytes.toFixed(dp) + ' ' + units[u]
-    }
-  },
-  async mounted() {
-    // const files = await Api.files.getAll()
-    // const sizes = files.map(el => el.size).reduce((a, b) => a + b, 0)
-
-    // this.filesSize = sizes
+import playBoxMultiple from '~icons/mdi/play-box-multiple';
 
 
+import { formatFileSize } from "@/utils/formatFileSize.js"
+import { supabase } from '@/core/supabaseClient'
+import { onMounted, computed, ref } from 'vue'
+import { useNotification } from 'naive-ui'
+
+const imagesSize = ref(0)
+const documentsSize = ref(0)
+const audioSize = ref(0)
+const otherSize = ref(0)
+const videosSize = ref(0)
 
 
-    // console.log('SIZES :',  humanFileSize(sizes, true), sizes)
-  },
-  computed: {
-    // filesSize() {}
-    storageCapacity() {
-      return ((this.filesSize / this.storageVolume) * 100).toFixed(2)
-    },
-    freeSpace() {
-      return this.storageVolume - this.filesSize
-    }
-  }
+const filesSize = ref(null)
+const storageVolume = ref(1000000000)
+
+
+// const notification = useNotification()
+// notification.warning({
+//   content: 'What to say?',
+//   meta: "I don't know",
+//   duration: 2000,
+//   keepAliveOnHover: true
+// })
+
+
+const getBucket = async () => {
+  const { data, error } = await supabase
+    .storage
+    .from('avatars')
+    .list('public/')
+
+  return {data, error}
 }
+
+const sortedData = async () => {
+  let bucket = await getBucket()
+
+  let images = []
+  let videos = []
+
+  let sorted = await bucket.data.map(el => {
+    if (el.metadata.mimetype === 'image/jpeg') images.push(el.metadata.size)
+    if (el.metadata.mimetype === 'video/mp4') videos.push(el.metadata.size)
+
+    imagesSize.value = images.reduce((a, b) => a + b, 0)
+    videosSize.value = videos.reduce((a, b) => a + b, 0)
+  })
+
+  return sorted
+}
+
+const storageCapacity = computed(() => {
+  return ((filesSize.value / storageVolume.value) * 100).toFixed(2)
+})
+
+const freeSpace = computed(() => {
+  return storageVolume.value - filesSize.value
+})
+
+onMounted(async () => {
+  let data = await getBucket()
+  const s = await data.data.map(el => el.metadata.size).reduce((a, b) => a + b, 0)
+  filesSize.value = s
+
+  sortedData()
+})
 </script>
 
 <style lang="scss">

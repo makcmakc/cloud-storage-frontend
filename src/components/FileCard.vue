@@ -1,14 +1,17 @@
 <template>
   <div class="list-item">
-    <div class="list-item__icon">
+    <div class="list-item__icon" v-if="isImage(item.metadata.mimetype)">
       <i class="list-item__ext" :class="color">{{ ext }}</i>
-      <img v-if="isImage(ext)" :src="publicURL+item.name" class="list-item__img" :alt="item.name">
+      <img :src="publicURL+item.name" class="list-item__img" :alt="item.name">
+    </div>
+    <div class="list-item__video" v-if="isVideo(item.metadata.mimetype)">
+      <video :src="publicURL+item.name"></video>
     </div>
     <div class="list-item__info">
       <div class="list-item__name">
         <span>{{ item.name }}</span>
       </div>
-      <div v-if="viewIsList" class="list-item__size">{{ getFileSize(item.metadata.size, true) }}</div>
+      <div v-if="viewIsList" class="list-item__size">{{ formatFileSize(item.metadata.size, true) }}</div>
       <div v-if="viewIsList" class="list-item__type">{{ item.metadata.mimetype }}</div>
     </div>
   </div>
@@ -22,9 +25,9 @@ import fileDocumentOutline from '~icons/mdi/file-document-outline';
 
 import { computed, onMounted, ref, toRefs } from "vue"
 import { getExtensionFromFileName } from "@/utils/getExtensionFromFileName.js"
-import { isImage } from "@/utils/isImage.js"
+// import { isImage } from "@/utils/isImage.js"
 import { getColorByExtension } from "@/utils/getColorByExtension.js"
-import { getFileSize } from "@/utils/getFileSize.js"
+import { formatFileSize } from "@/utils/formatFileSize.js"
 import { useViewStore } from '../stores/view'
 import { supabase } from '@/core/supabaseClient'
 
@@ -36,11 +39,14 @@ const viewIsList = computed(() => {
   return viewStore.view === 'by-list'
 })
 
+const isVideo = ext => ["video/mp4"].includes(ext)
+const isImage = ext => ["image/jpeg"].includes(ext)
+
 const { data } = supabase
   .storage
   .from('avatars')
   .getPublicUrl('public/')
-// console.log(data)
+
 publicURL.value = data.publicUrl
 
 const props = defineProps({ item: Object })
@@ -48,10 +54,5 @@ const props = defineProps({ item: Object })
 const { item } = toRefs(props)
 
 const ext = getExtensionFromFileName(item.value.name);
-// const imageUrl = ext && isImage(ext) ? "http://localhost:7777/uploads/" + item.value.filename : ""
 const color = getColorByExtension(ext)
 </script>
-
-<style>
-
-</style>

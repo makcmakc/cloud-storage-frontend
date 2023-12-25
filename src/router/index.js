@@ -17,12 +17,12 @@ const router = createRouter({
         {
           path: '/files',
           name: 'files',
-          component: () => import('../views/files.vue'),
+          component: () => import('../components/root/files.vue'),
         },
         {
           path: '/photos',
           name: 'photos',
-          component: () => import('../views/photos.vue'),
+          component: () => import('../components/root/photos.vue'),
           meta: {
             title: 'Фото',
           }
@@ -30,7 +30,7 @@ const router = createRouter({
         {
           path: '/trash',
           name: 'trash',
-          component: () => import('../views/trash.vue'),
+          component: () => import('../components/root/trash.vue'),
           meta: {
             title: 'Корзина',
           }

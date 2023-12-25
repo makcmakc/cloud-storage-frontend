@@ -1,0 +1,214 @@
+<template>
+  <div class="client-listing">
+    <div class="client-listing__container">
+      <div class="container">
+        <!-- <div class="list-items" :class="viewClass">
+          <FileCard v-for="item in photos" :key="item.id" :item="item" :data-id="item.id" />
+        </div> -->
+
+        <div class="photo-grid">
+          <div class="photo-preview"
+            v-for="photo in photos"
+            :key="photo.id"
+            @contextmenu="handleContextMenu($event, photo)"
+            @click="handleOpenFile($event, photo)"
+            @on-clickoutside="handleClose($event)"
+            >
+            <img v-if="!isVideo(photo.metadata.mimetype)" :src="publicURL+photo.name" class="photo-preview__img" :alt="photo.name" />
+
+            <video v-if="isVideo(photo.metadata.mimetype)" controls="controls" autoplay :src="publicURL+photo.name"></video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+
+    <n-popover
+      :show="showPopoverRef"
+      placement="right"
+      :x="xRef"
+      :y="yRef"
+      :show-arrow="false"
+      width="220"
+      @update:show="handleUpdateShow">
+
+      <template #trigger></template>
+      <div class="profile-popover context-menu">
+          <ul class="context-menu__list">
+            <li class="context-menu__item">
+              <button class="context-menu__button">
+                <linkBold />
+                <span>Поделиться</span>
+              </button>
+            </li>
+          </ul>          
+          <ul class="context-menu__list">
+            <li class="context-menu__item">
+              <button class="context-menu__button">
+                <photoAlbumFill />
+
+                <span>Добавить в альбом</span>
+              </button>
+            </li>
+            <li class="context-menu__item">
+              <button class="context-menu__button">
+                <starIcon />
+
+                <span>Добавить в избранное</span>
+              </button>
+            </li>            
+          </ul>
+          <ul class="context-menu__list">
+            <li class="context-menu__item">
+              <button class="context-menu__button">
+                <downloadIcon />
+
+                <span>Скачать</span>
+              </button>
+            </li>
+
+            <li class="context-menu__item">
+              <button class="context-menu__button">
+                <renameIcon />
+
+                <span>Переименовать</span>
+              </button>
+            </li>
+            <li class="context-menu__item">
+              <button class="context-menu__button">
+                <fileTransferFill />
+
+                <span>Переместить </span>
+              </button>
+            </li>
+          </ul>
+          <ul class="context-menu__list">
+            <li class="context-menu__item">
+              <button class="context-menu__button">
+                <baselineDelete />
+                <span>Удалить</span>
+              </button>
+            </li>
+          </ul>          
+      </div>
+    </n-popover>
+  </div>
+</template>
+
+<script setup>
+import sortReverseVariant from '~icons/mdi/sort-reverse-variant';
+import formatListBulleted from '~icons/mdi/format-list-bulleted';
+import appsIcon from '~icons/mdi/apps';
+
+import FileCard from '@/components/FileCard.vue';
+
+// import * as Api from '@/api'
+import { computed, ref, onMounted } from 'vue'
+
+import { supabase } from '@/core/supabaseClient'
+import { useViewStore } from '../../stores/view';
+
+const photos = ref([])
+
+const publicURL = ref('')
+
+async function getPhotos() {
+  const { data } = await supabase
+    .storage
+    .from('avatars')
+    .list('public/', {
+      limit: 12
+    })
+
+    console.log(data)
+  photos.value = data.filter(el => isImage(el.metadata.mimetype) )
+}
+
+async function getPhotosURL() {
+  const { data } = supabase
+    .storage
+    .from('avatars')
+    .getPublicUrl('public/')
+
+  publicURL.value = data.publicUrl
+}
+
+const isVideo = ext => ["video/mp4"].includes(ext)
+const isImage = ext => ["image/jpeg"].includes(ext)
+
+
+const xRef = ref(0);
+const yRef = ref(0);
+const showPopoverRef = ref(false);
+
+const handleContextMenu = (e, photo) => {
+  e.preventDefault()
+  if (showPopoverRef.value) {
+    showPopoverRef.value = false;
+  } else {
+    showPopoverRef.value = true;
+    xRef.value = e.clientX;
+    yRef.value = e.clientY;
+  }
+}
+
+const handleOpenFile = (e, photo) => {
+  console.log(e, photo)
+}
+
+const handleClose = (e) => {
+  console.log(e)
+  showPopoverRef.value = false
+}
+
+
+const viewStore = useViewStore()
+
+const viewClass = computed(() => {
+  return  viewStore.view === 'by-tile' ? 'list-items--by-tile' : 'list-items--by-list'
+})
+
+
+onMounted(() => {
+  getPhotos()
+  getPhotosURL()
+})
+
+// let listItems = ref(await Api.files.getAll('photos'))
+</script>
+
+<style lang="scss">
+.n-popover.n-popover-shared {
+  padding: 0 !important;
+}
+</style>
+
+<style lang="scss" scoped>
+
+
+
+.photo-grid {
+  user-select: none;
+    // display: grid;
+    // grid-template-columns: repeat(3, 1fr);
+    // grid-template-rows: repeat(3, 5vw);
+    // grid-gap: 5px;
+
+    // grid-auto-rows: dense;
+    // // grid-auto-rows: 200px;
+    // grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    columns: 3 200px;
+    column-gap: 5px;
+
+    img {
+      object-fit: cover;
+      width: 100%;
+    }
+
+    video {
+            width: 100%;
+    }
+}
+</style>

@@ -9,7 +9,8 @@ module.exports = {
     '@vue/eslint-config-prettier/skip-formatting',
   ],
   rules: {
-    'vue/no-v-model-argument': 'error'
+    'vue/no-v-model-argument': 'off',
+    'vue/no-multiple-template-root': 'off'
   },
   parserOptions: {
     ecmaVersion: 'latest'
