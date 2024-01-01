@@ -7,37 +7,45 @@
 
       <div class="client-listing__settings">
         <span class="settings-by-sort">
-          <n-dropdown trigger="click" :options="sortSettings" @select="handleSortSelect">
-            <n-button icon-placement="right">
-              <template #icon>
-                <n-icon>
-                  <chevronDown />
-                </n-icon>
-              </template>
-              <sortReverseVariant style="font-size: 1.3em" />
-            </n-button>
-          </n-dropdown>                  
+          <el-dropdown @command="handleViewSelect" trigger="click">
+            <span class="el-dropdown-link">
+              <formatListBulleted />
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-for="(view, i) in viewSettings" :class="{'is-title': view.isTitle}" :key="i" :command="view.key">{{ view.label }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>                          
         </span>
-
         <span class="settings-by-type">
-          <n-dropdown trigger="click" :options="viewSettings" @select="handleViewSelect">
-            <n-button icon-placement="right">
-              <template #icon>
-                <n-icon>
-                  <chevronDown />
-                </n-icon>
-              </template>
-              <formatListBulleted style="font-size: 1.3em; display: none" />
-              <appsIcon style="font-size: 1.3em" />
-            </n-button>
-          </n-dropdown>
+          <el-dropdown @command="handleSortSelect" trigger="click">
+            <span class="el-dropdown-link">
+              <sortReverseVariant />
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-for="(sort, i) in sortSettings" :class="{'is-title': sort.isTitle}" :key="i" :command="sort.key">{{ sort.label }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>                          
         </span>
       </div>
     </div>
 
     <div class="client-listing__container">
       <div class="list-items" :class="viewClass">
-        <FileCard v-for="file in files" :key="file.id" :item="file" :data-id="file.id" />
+      <!-- <div class="folders">
+        <FolderCard v-for="bucket in buckets" :key="bucket.id" :folder="bucket" :data-id="bucket.id" />
+      </div> -->
+        
+        <FileCard v-for="(file, idx) in files" :key="file.id" :idx="idx" :item="file" :data-id="file.id" />
       </div>
     </div>
 
@@ -58,41 +66,9 @@
   </div>
 </template>
 
-<script >
-export default {
-  data() {
-    return {
-      contextMenuVisibile: false,
-      x: 0,
-      y: 0
-    }
-  },
-
-  methods: {
-     handleContextMenu (event, item) {
-      //  this.contextMenuVisibile = !this.contextMenuVisibile
-      this.contextMenuVisibile = true
-      this.y = event.clientY + 10 + 'px'
-      this.x = event.clientX + 10 + 'px'
-
-      document.body.addEventListener('click', (e) => {
-        console.log('REF s', this.$refs.contextMenu, e.target.offsetParent)
-
-        if (e.target.offsetParent !== this.$refs.contextMenu) {
-          this.contextMenuVisibile = true
-        }
-        this.contextMenuVisibile = false
-      })
-    },
-    handleDelete(e) {
-      console.log(e)
-    }
-  }
-}
-</script>
-
 <script setup>
 import FileCard from '@/components/FileCard.vue'
+import FolderCard from '@/components/FolderCard.vue'
 
 import baselineDelete from '~icons/ic/baseline-delete';
 import downloadIcon from '~icons/material-symbols/download';
@@ -105,15 +81,23 @@ import linkBold from '~icons/solar/link-bold';
 import starIcon from '~icons/material-symbols/star';
 
 
+import {
+  ArrowDown,
+  Check,
+  CircleCheck,
+  CirclePlus,
+  CirclePlusFilled,
+  Plus,
+} from '@element-plus/icons-vue'
 
 import sortReverseVariant from '~icons/mdi/sort-reverse-variant'
 import formatListBulleted from '~icons/mdi/format-list-bulleted'
 import appsIcon from '~icons/mdi/apps'
 import chevronDown from '~icons/mdi/chevron-down'
 
-// import * as Api from '@/api'
 import { computed, ref, onMounted } from 'vue'
 import { useViewStore } from '../../stores/view' 
+import { useFilesStore } from '../../stores/files' 
 
 import { VueSelecto } from 'vue3-selecto'
 
@@ -121,181 +105,58 @@ import { VueSelecto } from 'vue3-selecto'
 import { supabase } from '@/core/supabaseClient'
 
 
-const countries = ref([])
+const filesStore = useFilesStore()
+
+
+const buckets = ref([])
 const files = ref([])
-const publicURL = ref('')
+const viewSettings = filesStore.viewSettings
+const sortSettings = filesStore.sortSettings
+
 
 const isVideo = ext => ["video/mp4"].includes(ext)
 const isImage = ext => ["image/jpeg"].includes(ext)
 
-const filesView = ref('tile')
-const sortSettings = [
-  {
-    label: 'Сортировка',
-    key: 'Marina Bay Sands',
-    disabled: true
-  },
-  {
-    label: "По названию",
-    key: "by-name"
-  },
-  {
-    label: 'По размеру',
-    key: 'by-size'
-  },
-  {
-    label: 'По типу',
-    key: 'by-type'
-  },
-  {
-    label: 'По Дате изменения',
-    key: 'by-date'
-  },                
-]
-const viewSettings = [
-  {
-    label: 'Вид',
-    key: 'view',
-    disabled: true
-  },
-  {
-    label: "Плитка",
-    key: "by-tile"
-  },
-  {
-    label: 'Список',
-    key: 'by-list'
-  },
-]
+const handleSortSelect = (v) => filesStore.updateSort(v)
+
+const handleViewSelect = (v) => filesStore.updateView(v)
 
 
-
-
-async function getCountries() {
-  const { data } = await supabase.from('countries').select()
-  countries.value = data
+const onSelectStart = (e) => {
+  e.added.forEach(el => el.classList.add('selected'))
+  e.removed.forEach(el => el.classList.remove('selected'))
+}
+const onSelectEnd = (e) => {
+  e.afterAdded.forEach(el => el.classList.add('selected'))
+  e.afterRemoved.forEach(el => el.classList.remove('selected'))
 }
 
-async function getFiles() {
-  const { data } = await supabase
-    .storage
-    .from('avatars')
-    .list('public/', {
-      limit: 12
-    })
-  files.value = data
-}
-
-
-const { data } = supabase
-  .storage
-  .from('avatars')
-  .getPublicUrl('public/')
-// console.log(data)
-publicURL.value = data.publicUrl
-
-// console.log(publicURL.value)
-
-const handleSortSelect = (e) => {
-  const viewStore = useViewStore()
-  viewStore.sort = e
-  console.log('Select by sort : ', e, viewStore.sort)
-}
-
-const handleViewSelect = (e) => {
-  const viewStore = useViewStore()
-  viewStore.view = e
-  console.log('Select by view : ', e, viewStore.view)
-}
-
-const handleView = () => {
-  this.filesView = 'list'
-  localStorage.setItem('VcloudView', 'list')
-}
-
-
-    const onSelectStart = (e) => {
-      e.added.forEach(el => el.classList.add('selected'))
-      e.removed.forEach(el => el.classList.remove('selected'))
-    }
-    const onSelectEnd = (e) => {
-      e.afterAdded.forEach(el => el.classList.add('selected'))
-      e.afterRemoved.forEach(el => el.classList.remove('selected'))
-    }
-
-
-onMounted(() => {
-  getCountries()
-
-  getFiles()
-})
-
-
-
-const viewStore = useViewStore()
 
 const viewClass = computed(() => {
-  return  viewStore.view === 'by-tile' ? 'list-items--by-tile' : 'list-items--by-list'
+  return filesStore.view === 'by-tile' ? 'list-items--by-tile' : 'list-items--by-list'
 })
 
-let listItems = [
-  // {
-  //   folder: [
-  //     {
-  //       id: 1,
-  //       filename: 'Cara Develigne',
-  //       originalName: 'cara-develigne',
-  //       size: 2049,
-  //       mimetype: 'pdf',
-  //       user: 'maxi',
-  //       deletedAt: '10-10-2023'
-  //     },
-  //   ]
-  // },
-  {
-    id: 1,
-    filename: 'Cara Develigne',
-    originalName: 'cara-develigne',
-    size: 2049,
-    mimetype: 'pdf',
-    user: 'maxi',
-    deletedAt: '10-10-2023'
-  },
-  {
-    id: 2,
-    filename: 'Cara Develigne',
-    originalName: 'cara-develigne',
-    size: 2049,
-    mimetype: 'jpeg',
-    user: 'maxi',
-    deletedAt: '10-10-2023'
-  },
-  {
-    id: 3,
-    filename: 'Cara Develigne',
-    originalName: 'cara-develigne',
-    size: 2049,
-    mimetype: 'jpeg',
-    user: 'maxi',
-    deletedAt: '10-10-2023'
-  }  
-]
-
-const sortedItems = listItems.sort((a, b) => {
-  switch (viewStore.sort) {
-    case 'by-size':
-      return listItems.sort((a, b) => a.size - b.size)
-    case 'by-name':
-      return listItems.sort((a, b) => a.name - b.name)
-    case 'by-date':
-      return listItems.sort((a, b) => a.date - b.date)
-    case 'by-type':
-      return listItems.sort((a, b) => a.type - b.type)      
-    default:
-      return listItems.sort((a, b) => a.name - b.name)
-  }
+onMounted(async () => {
+  // files.value = 
+  await filesStore.fetchFiles()
+  await filesStore.fetchBuckets()
+  files.value = filesStore.getFiles
+  buckets.value = filesStore.getBuckets
 })
 </script>
 
 <style lang="scss">
+.folders {
+  display: flex;
+  gap: 12px;
+}
+
+.el-dropdown-menu__item.is-title {
+  // border-bottom: 1px solid #EBEEF5;
+  font-size: 13px;
+  padding: 4px 16px;
+  color: #909399;
+  pointer-events: none;
+
+}
 </style>

@@ -6,6 +6,8 @@
           <FileCard v-for="item in photos" :key="item.id" :item="item" :data-id="item.id" />
         </div> -->
 
+        {{ handleContextMenuPosition }}
+
         <div class="photo-grid">
           <div class="photo-preview"
             v-for="photo in photos"
@@ -21,11 +23,28 @@
         </div>
       </div>
     </div>
+        <!-- :style="handleContextMenuPosition" -->
 
-    
+
+        <!-- <div style="background: red; padding: 30px; position: absolute;" :style="handleContextMenuPosition">
+          <p>LOREM 314oinkl</p>
+        </div> -->
+<!-- 
+  <el-popover
+    ref="popover"
+    title="Title"
+    :width="200"
+    trigger="contextmenu"
+    :style="handleContextMenuPosition"
+    content="this is content, this is content, this is content"
+  >
+    <template #reference>
+      <el-button class="m-2">contextmenu to activate</el-button>
+    </template>
+  </el-popover> -->
 
 
-    <n-popover
+    <!-- <n-popover
       :show="showPopoverRef"
       placement="right"
       :x="xRef"
@@ -93,7 +112,7 @@
             </li>
           </ul>          
       </div>
-    </n-popover>
+    </n-popover> -->
   </div>
 </template>
 
@@ -126,6 +145,8 @@ async function getPhotos() {
   photos.value = data.filter(el => isImage(el.metadata.mimetype) )
 }
 
+
+
 async function getPhotosURL() {
   const { data } = supabase
     .storage
@@ -141,17 +162,24 @@ const isImage = ext => ["image/jpeg"].includes(ext)
 
 const xRef = ref(0);
 const yRef = ref(0);
-const showPopoverRef = ref(false);
+const showPopoverRef = ref(true);
+
+const handleContextMenuPosition = computed(() => {
+  return `left: ${xRef.value}px; top: ${yRef.value}px;`
+})
 
 const handleContextMenu = (e, photo) => {
   e.preventDefault()
-  if (showPopoverRef.value) {
-    showPopoverRef.value = false;
-  } else {
-    showPopoverRef.value = true;
-    xRef.value = e.clientX;
+  // if (showPopoverRef.value) {
+  //   showPopoverRef.value = false;
+  // } else {
+  //   showPopoverRef.value = true;
+  //   xRef.value = e.clientX;
+  //   yRef.value = e.clientY;
+  // }
+      xRef.value = e.clientX;
     yRef.value = e.clientY;
-  }
+  console.log(xRef.value, yRef.value)
 }
 
 const handleOpenFile = (e, photo) => {
@@ -205,10 +233,6 @@ onMounted(() => {
     img {
       object-fit: cover;
       width: 100%;
-    }
-
-    video {
-            width: 100%;
     }
 }
 </style>

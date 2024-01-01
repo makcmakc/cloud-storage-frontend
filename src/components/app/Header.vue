@@ -4,14 +4,14 @@
       <div class="app-header">
         <router-link to="/" class="app-logo">
           <div class="app-logo__icon">
-            <appleIcloud style="font-size: 2em" />
+            <appleIcloud style="font-size: 2em; stroke: #67c23a; fill: #fff;" />
           </div>
           <div class="app-logo__title">Cloud Storage</div>
         </router-link>
 
         <div class="app-settings">
           <div class="app-header__profile">
-            <n-popover
+            <!-- <n-popover
               placement="bottom"
               trigger="hover"
               @update:show="handleUpdateShow">
@@ -50,7 +50,7 @@
                   </div>
                 </div>
               </div>
-            </n-popover>
+            </n-popover> -->
           </div>
         </div>
       </div>
@@ -159,6 +159,7 @@ header {
 
   &__icon {
     margin-right: 10px;
+    color: #fff;
   }
 
   &__title {

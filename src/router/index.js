@@ -9,6 +9,13 @@ const router = createRouter({
         return 'files'
       }
     },
+    // {
+    //   path: '/files',
+    //   name: 'files',
+    //   children: [
+
+    //   ]
+    // },
     {
       path: '/client/:route',
       name: 'client',
@@ -19,6 +26,11 @@ const router = createRouter({
           name: 'files',
           component: () => import('../components/root/files.vue'),
         },
+        {
+          path: '/folder/:id',
+          name: 'folder',
+          component: () => import('../components/root/folder.vue'),
+        },         
         {
           path: '/photos',
           name: 'photos',

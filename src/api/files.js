@@ -10,6 +10,15 @@ import { supabase } from '@/core/supabaseClient'
 //   return axios.delete('/files?ids=' + ids)
 // }
 
+export const getFiles = async () => {
+  const { data, error } = await supabase
+  .storage
+  .from('avatars')
+  .list('public/')
+
+  return { data, error }
+}
+
 
 export const createBucket = async () => {
   const { data, error } = await supabase

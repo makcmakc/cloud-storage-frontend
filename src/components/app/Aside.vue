@@ -22,11 +22,14 @@
     <div class="app-aside__info">
       <div class="info-space">
         <div class="info-space__header">
-          <n-collapse arrow-placement="right">
-            <template #header-extra>
-              <n-icon><sharpAddchart /></n-icon>
-            </template>
-            <n-collapse-item title="Storage">
+          <el-collapse arrow-placement="right" class="info-space__collapse">      
+            <el-collapse-item title="Storage">
+              <template #title>
+                <el-icon class="info-space__header-icon">
+                  <sharpAddchart /> 
+                </el-icon>
+                <span class="info-space__header-title">Storage</span>
+              </template>  
               <div class="info-space__details">
                 <div class="info-space__details-category" v-if="documentsSize">
                   <div class="category-title">
@@ -74,8 +77,8 @@
                   </div> 
                 </div>                                        
               </div>
-            </n-collapse-item>
-          </n-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
         <div class="indicator-bar">
           <div class="indicator-bar__value" :style="'width:' + storageCapacity + '%'"></div>
@@ -107,7 +110,6 @@ import playBoxMultiple from '~icons/mdi/play-box-multiple';
 import { formatFileSize } from "@/utils/formatFileSize.js"
 import { supabase } from '@/core/supabaseClient'
 import { onMounted, computed, ref } from 'vue'
-import { useNotification } from 'naive-ui'
 
 const imagesSize = ref(0)
 const documentsSize = ref(0)
