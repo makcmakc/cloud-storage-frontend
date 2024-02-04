@@ -1,7 +1,8 @@
 <template>
   <div class="list-item folder" @dblclick="handleMoveToFolder(folder)">
-    <div class="folder__info">
-      <div class="folder__name">
+  <div class="list-item__icon"></div>
+    <div class="list-item__info folder__info">
+      <div class="list-item__name folder__name">
         {{ folder.name }}
       </div>
     </div>
@@ -26,15 +27,13 @@ const { folder } = toRefs(props)
 </script>
 
 <style lang="scss">
-.folder {
-  width: 142px;
-  height: 142px;
-  position: relative;
-  display: inline-block;
-  vertical-align: middle;
-  max-width: 100%;
-  max-height: 100%;
-  margin: 8px;
+.folder .list-item__icon {
+  // position: relative;
+  // display: inline-block;
+  // vertical-align: middle;
+  width: 150px;
+  // max-height: 100%;
+  // margin: 8px;
 
   &__info {
     display: flex;
@@ -44,8 +43,8 @@ const { folder } = toRefs(props)
   }
 
   &__name {
-    position: absolute;
-    bottom: -10px;
+    // position: absolute;
+    // bottom: -10px;
   }
 
   &:after {
@@ -54,11 +53,14 @@ const { folder } = toRefs(props)
     top: 0;
     left: 0;
     right: 0;
-    bottom: 20px;
+    bottom: 0px;
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: 50%;    
+    background-position: 50% 50%;    
     background-image: url('@/assets/folder.svg');
+    width: 110px;
+    height: 110px;
+    margin: 0 auto;
   }
 }
 </style>

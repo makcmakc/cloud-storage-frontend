@@ -6,7 +6,7 @@
           <FileCard v-for="item in photos" :key="item.id" :item="item" :data-id="item.id" />
         </div> -->
 
-        {{ handleContextMenuPosition }}
+        <!-- {{ handleContextMenuPosition }} -->
 
         <div class="photo-grid">
           <div class="photo-preview"
@@ -14,7 +14,6 @@
             :key="photo.id"
             @contextmenu="handleContextMenu($event, photo)"
             @click="handleOpenFile($event, photo)"
-            @on-clickoutside="handleClose($event)"
             >
             <img v-if="!isVideo(photo.metadata.mimetype)" :src="publicURL+photo.name" class="photo-preview__img" :alt="photo.name" />
 

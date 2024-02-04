@@ -7,38 +7,33 @@
     <div class="app-auth__content">
       <form class="auth-form" @submit.prevent="handleSignIn">
         <div class="auth-form__fieldset">
-          <n-input size="large" v-model:value="email" placeholder="E-mail">
-            <template #prefix>
-              <!-- <n-icon :component="baselineEmail" /> -->
-              <baselineEmail />
-            </template>
-          </n-input>
+          <el-input size="large" :prefix-icon="Message" v-model="email" placeholder="E-mail" />
         </div>
 
         <div class="auth-form__fieldset">
-          <n-input
+          <el-input
             type="password"
-            show-password-on="mousedown"
+            show-password
             placeholder="Password"
             size="large"
-            v-model:value="password"
-          >
-            <template #prefix>
-              <lockIcon />
-            </template>
-          </n-input>
+            v-model="password"
+            :prefix-icon="Lock"
+          />
         </div>
 
-        <n-button type="primary" attr-type="submit" :loading="loading" size="large" class="auth-form__btn">Sign In</n-button>
+        <el-button type="success" attr-type="submit" :loading="loading" size="large" class="auth-form__btn">Sign In</el-button>
       </form>
     </div>
 
     <div class="app-auth__footer">
-      <n-divider>OR</n-divider>
+      <el-divider>OR</el-divider>
 
-      <div class="app-auth__signup" @click="this.$emit('auth-type', '__SIGNUP__')">
-        <n-button size="large">Sign Up</n-button>
-      </div>
+      <el-button type="default">
+        <el-icon class="el-icon--left"><img style="width: 15px;" src="@/assets/github-mark.svg" alt=""> </el-icon>Github
+      </el-button>
+      <!-- <div class="app-auth__signup" @click="this.$emit('auth-type', '__SIGNUP__')">
+        <el-button type="success" plain size="large">Sign Up</el-button>
+      </div> -->
     </div>
   </div>
 </template>
@@ -93,6 +88,10 @@
 
 
 <script setup>
+import {
+  Message,
+  Lock
+} from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { supabase } from '@/core/supabaseClient'
 // import { useMessage } from 'naive-ui'
@@ -112,8 +111,9 @@ const handleSignIn = async () => {
       email: email.value,
       password: password.value,
     })
+    
 
-    if (error) message.warning(error)
+    if (error) console.log(error)
     router.push('/')
   } catch (error) {
     // message.error(error)
@@ -124,4 +124,7 @@ const handleSignIn = async () => {
 </script>
 
 <style>
+.el-divider__text {
+  background: #f4f6f9;
+}
 </style>

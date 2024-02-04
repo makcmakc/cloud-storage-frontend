@@ -1,9 +1,25 @@
 <template>
- <div class="demo-image__preview">
   <div class="list-item">
     <div class="list-item__icon" v-if="isImage(item.metadata.mimetype)">
-      <i class="list-item__ext" :class="color">{{ ext }}</i>
-      <el-image
+      <!-- <i class="list-item__ext" :class="color">{{ ext }}</i> -->
+
+
+      <!-- <preview :item="item"></preview> -->
+
+      <!-- {{ item.name }} -->
+
+      <el-image @dblclick="showPreview(publicURL+item.name)" :src="publicURL+item.name" alt="" />
+
+      <el-dialog
+        v-model="centerDialogVisible"
+        title="Warning"
+        width="30%"
+        align-center
+      >
+        <!-- <video :src="videoURL" controls ></video> -->
+        <img :src="videoURL" alt="">
+      </el-dialog>
+      <!-- <el-image
         style="width: 100px; height: 100px"
         ref="imageEl"
         :src="publicURL+item.name"
@@ -17,10 +33,28 @@
         @switch="clickHandle(e)"
         @dblclick="showPreview"
       >
-      </el-image>
+      </el-image> -->
     </div>
-    <div class="list-item__video" v-if="isVideo(item.metadata.mimetype)">
-      <video :src="publicURL+item.name"></video>
+    <!-- <div class="list-item__video" v-if="isVideo(item.metadata.mimetype)">
+      <video :src="publicURL+item.name" style="cursor: pointer" @dblclick="showVideo(publicURL+item.name)"></video>
+
+      <el-dialog
+        v-model="centerDialogVisible"
+        title="Warning"
+        width="30%"
+        align-center
+      >
+        <video :src="videoURL" controls ></video>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="centerDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="centerDialogVisible = false">
+              Confirm
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+  
     </div>
     <div class="list-item__info">
       <div class="list-item__name">
@@ -28,15 +62,16 @@
       </div>
       <div v-if="viewIsList" class="list-item__size">{{ formatFileSize(item.metadata.size, true) }}</div>
       <div v-if="viewIsList" class="list-item__type">{{ item.metadata.mimetype }}</div>
-    </div>
+    </div> -->
   </div>
- </div>
 </template>
 
 <script setup>
 import filePdfBox from '~icons/mdi/file-pdf-box';
 import filePdfOutlined from '~icons/ant-design/file-pdf-outlined';
 import fileDocumentOutline from '~icons/mdi/file-document-outline';
+
+import Preview from './preview/Preview.vue'
 
 
 import { computed, nextTick, onMounted, ref, toRefs } from "vue"
@@ -47,15 +82,35 @@ import { supabase } from '@/core/supabaseClient'
 import { useFilesStore } from '../stores/files';
 
 const isVideo = ext => ["video/mp4"].includes(ext)
-const isImage = ext => ["image/jpeg"].includes(ext)
+const isImage = ext => ["image/jpeg", "image/png"].includes(ext)
 
 const filesStore = useFilesStore()
 
 const photos = ref([])
 
+const videoURL = ref('')
 
-const clickHandle = () => {
+
+const centerDialogVisible = ref(false)
+// el-image-viewer__wrapper
+
+
+const showPreview = (e) => {
+  console.log('SHOWPREVIEW ')
+    videoURL.value = e
+  centerDialogVisible.value = true
+}
+
+
+const clickHandle = (e) => {
   console.log('SWITHCED')
+
+}
+
+const showVideo = (e) => {
+  console.log('showVideo')
+  videoURL.value = e
+  centerDialogVisible.value = true
 }
 
 const imageEl = ref()
@@ -71,10 +126,6 @@ const showView = () => {
     })
     actionEl.appendChild(loadIcon)
   })
-}
-
-const showPreview = () => {
-  
 }
 
 const publicURL = ref('')

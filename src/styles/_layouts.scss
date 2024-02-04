@@ -40,15 +40,22 @@
       align-items: flex-end;
       position: relative;
       display: flex;
-      order: 0;
-      flex-shrink: 0;
-      justify-content: center;
+      // order: 0;
+      // flex-shrink: 0;
+      // justify-content: center;
 
       img {
         max-height: 120px;
         max-width: 120px;
         box-sizing: border-box;
         display: block;
+      }
+
+      video {
+        max-height: 120px;
+        max-width: 120px;
+        box-sizing: border-box;
+        display: block;        
       }
 
       svg {

@@ -1,7 +1,7 @@
 <template>
   <aside class="app-aside">
     <div class="app-aside__upload">
-      <UploadButton />
+      <UploadButton v-model:path="avatar_url" @upload="updateProfile" size="10" />
     </div>
 
     <nav class="app-aside__nav">
@@ -116,6 +116,9 @@ const documentsSize = ref(0)
 const audioSize = ref(0)
 const otherSize = ref(0)
 const videosSize = ref(0)
+
+
+const avatar_url = ref('')
 
 
 const filesSize = ref(null)

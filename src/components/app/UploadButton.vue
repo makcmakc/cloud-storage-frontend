@@ -1,10 +1,107 @@
+<script setup>
+import { ref, toRefs, watch } from 'vue'
+import { supabase } from '@/core/supabaseClient'
+import { useFilesStore } from '@/stores/files'
+
+
+const filesStore = useFilesStore()
+
+
+const prop = defineProps(['path', 'size'])
+const { path, size } = toRefs(prop)
+
+const emit = defineEmits(['upload', 'update:path'])
+const uploading = ref(false)
+const src = ref('')
+const files = ref()
+
+const downloadImage = async () => {
+  try {
+    const { data, error } = await supabase.storage.from('avatars/public').download(path.value)
+    if (error) throw error
+    src.value = URL.createObjectURL(data)
+  } catch (error) {
+    console.error('Error downloading image: ', error.message)
+  }
+}
+
+const uploadAvatar = async (evt) => {
+  files.value = evt.target.files
+  try {
+    uploading.value = true
+    if (!files.value || files.value.length === 0) {
+      throw new Error('You must select an image to upload.')
+    }
+
+    const file = files.value[0]
+ 
+    filesStore.uploadFiles(files.value)
+    // const fileExt = file.name.split('.').pop()
+    // const filePath = `${Math.random()}.${fileExt}`
+
+    // const { error: uploadError } = await supabase.storage.from('avatars/public').upload(filePath, file)
+
+    // if (uploadError) throw uploadError
+    // emit('update:path', filePath)
+    // emit('upload')
+
+    // console.log('UPLOAD DONE!!!', file)
+    // await filesStore.fetchFiles()
+  } catch (error) {
+    alert(error.message)
+  } finally {
+    uploading.value = false
+  }
+}
+
+// watch(path, () => {
+//   if (path.value) downloadImage()
+// })
+</script>
+
 <template>
+  <div>
+    <!-- <img
+      v-if="src"
+      :src="src"
+      alt="Avatar"
+      class="avatar image"
+      :style="{ height: size + 'em', width: size + 'em' }"
+    /> -->
+    <!-- <div v-else class="avatar no-image" :style="{ height: size + 'em', width: size + 'em' }" /> -->
+
+
+      <label class="el-button el-button--success el-button--large btn--upload" for="single">
+        Загрузить файл
+      </label>
+      <input
+        style="visibility: hidden; position: absolute"
+        type="file"
+        id="single"
+        multiple
+        accept="image/*"
+        @change="uploadAvatar"
+        :disabled="uploading"
+      />
+  </div>
+</template>
+
+
+<style lang="scss" scoped>
+:deep(.btn--upload) {
+  width: 100%;
+}
+</style>
+
+
+<!-- <template>
   <el-upload
     ref="upload"
-    :limit="1"
+    class="upload-demo"
+    :on-change="uploadFile"
 
-    :auto-upload="false"
   >
+      :on-change="uploadFile"
     <template #trigger>
       <el-button class="btn btn--upload" type="success" size="large" @click="submitUpload">
         Загрузить файл
@@ -19,44 +116,34 @@ import cloudUploadOutline from '~icons/mdi/cloud-upload-outline'
 import * as Api from '@/api'
 import { supabase } from '@/core/supabaseClient'
 import { ref } from 'vue';
-// import { useMessage } from 'naive-ui'
 
 const file = ref(null)
 const form = ref(null)
-// const message = useMessage()
+
+const files = ref([])
 
 const uploadFile = async ($event) => {
-  const file = $event.file.file
-
+  files.value = evt.target.files
   try {
-    // const { error } = await supabase
-    //   .storage
-    //   .from('avatars')
-    //   .upload('public' + '/' + file.name, file)
-    // if (error) message.error(error)
-    await Api.files.uploadFile(file)
-    window.location.reload()
-  } catch( e) {
-    console.log(e)
+    uploading.value = true
+    if (!files.value || files.value.length === 0) {
+      throw new Error('You must select an image to upload.')
+    }
+
+    const file = files.value[0]
+    const fileExt = file.name.split('.').pop()
+    const filePath = `${Math.random()}.${fileExt}`
+
+    const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+
+    if (uploadError) throw uploadError
+    emit('update:path', filePath)
+    emit('upload')
+  } catch (error) {
+    alert(error.message)
+  } finally {
+    uploading.value = false
   }
-
-
-
-
-  // try {
-
-  //   const file = $event.target.files[0];
-
-  //   console.log(file)
-
-  //   if (file !== undefined) {
-  //     await Api.files.uploadFile(file)
-  //     window.location.reload()
-  //   }
-  // } catch (error) {
-  //   console.log(error)
-  // }
-
 }
 </script>
 
@@ -127,4 +214,4 @@ const uploadFile = async ($event) => {
 // }
 
 </style>
-
+ -->

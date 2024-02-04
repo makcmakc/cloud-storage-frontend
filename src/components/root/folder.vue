@@ -5,7 +5,7 @@
       <el-breadcrumb-item>{{ router.currentRoute.value.params.id }}</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <!-- <h1>INSIDE FOLDER</h1> -->
+    <h1>INSIDE FOLDER</h1>
 
   </div>
 </template>

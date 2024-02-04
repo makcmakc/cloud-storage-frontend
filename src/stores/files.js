@@ -1,6 +1,4 @@
-// import { ref } from 'vue'
 import { defineStore } from 'pinia'
-
 import { supabase } from '@/core/supabaseClient'
 import { handleError } from '@/utils/handleError'
 
@@ -12,6 +10,7 @@ export const useFilesStore = defineStore('files', {
     photos: [],
     sort: 'by-name',
     view: 'by-tile',
+    uploadingFiles: [],
     sortSettings: [
       {
         label: 'Сортировка',
@@ -58,7 +57,7 @@ export const useFilesStore = defineStore('files', {
     getSort: state => state.sort,
     getViewSettings: state => state.viewSettings,
     getSortSettings: state => state.sortSettings,
-    // getPublicURLs: state => {}
+    getUploadingFiles: state => state.uploadingFiles
   },
   actions: {
     async fetchFiles() {
@@ -138,11 +137,19 @@ export const useFilesStore = defineStore('files', {
       // const { data, error } = await supabase
       //   .storage
       //   .from('avatars')
-      //   .download('folder/avatar1.png')    
+      //   .download('folder/avatar1.png')   
+      
+      //     const { data, error } = await supabase.storage.from('avatars/public').download(path.value)
+//     if (error) throw error
+//     src.value = URL.createObjectURL(data)
         
       console.log(payload)
 
       return payload
+    },
+    uploadFiles(payload) {
+      console.log(payload)
+      this.uploadingFiles = payload
     }
   },
 })

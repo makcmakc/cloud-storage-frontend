@@ -10,9 +10,15 @@ module.exports = {
   ],
   rules: {
     'vue/no-v-model-argument': 'off',
-    'vue/no-multiple-template-root': 'off'
+    'vue/no-multiple-template-root': 'off',
+    '[vue/no-multiple-template-root]': 'off'
   },
   parserOptions: {
     ecmaVersion: 'latest'
-  }
+  },
+  // workingDirectories: [
+  //   {
+  //     'mode': 'auto'
+  //   }
+  // ]
 }

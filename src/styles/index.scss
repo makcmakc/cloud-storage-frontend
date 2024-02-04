@@ -197,11 +197,9 @@ body {
 
   &__head {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     flex-wrap: wrap;
     position: relative;
-
-    // margin-bottom: 15px;
     margin: 15px 0 15px;
 
     &--trash {

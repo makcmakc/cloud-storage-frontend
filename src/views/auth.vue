@@ -7,18 +7,19 @@
           <!-- <img src="@/assets/cloud.svg" alt=""> -->
         </div>
         <div class="auth-desc">
-          The VCloud is the ultimate tool for managing all of your files in one central location.
+          My personal meme cloud
+          <!-- The VCloud is the ultimate tool for managing all of your files in one central location. -->
         </div>
       </div>
 
       <div class="auth-wrapper__right">
-        <template v-if="authType === '__SIGNIN__'">
+        <!-- <template v-if="authType == '__SIGNIN__'"> -->
           <LoginForm @auth-type="updateType" />
-        </template>
+        <!-- </template> -->
 
-        <template v-if="authType === '__SIGNUP__'">
+        <!-- <template v-if="authType == '__SIGNUP__'">
           <RegisterForm @auth-type="updateType" />
-        </template>
+        </template> -->
       </div>
 
     </div>

@@ -8,12 +8,14 @@
       <div class="client-listing__settings">
         <span class="settings-by-sort">
           <el-dropdown @command="handleViewSelect" trigger="click">
-            <span class="el-dropdown-link">
-              <formatListBulleted />
-              <el-icon class="el-icon--right">
-                <arrow-down />
-              </el-icon>
-            </span>
+           <el-button plain>
+              <span class="el-dropdown-link">
+                <formatListBulleted />
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </span>             
+           </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item v-for="(view, i) in viewSettings" :class="{'is-title': view.isTitle}" :key="i" :command="view.key">{{ view.label }}</el-dropdown-item>
@@ -23,12 +25,14 @@
         </span>
         <span class="settings-by-type">
           <el-dropdown @command="handleSortSelect" trigger="click">
-            <span class="el-dropdown-link">
-              <sortReverseVariant />
-              <el-icon class="el-icon--right">
-                <arrow-down />
-              </el-icon>
-            </span>
+            <el-button plain>
+              <span class="el-dropdown-link">
+                <sortReverseVariant />
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </span>
+            </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item v-for="(sort, i) in sortSettings" :class="{'is-title': sort.isTitle}" :key="i" :command="sort.key">{{ sort.label }}</el-dropdown-item>
@@ -40,12 +44,12 @@
     </div>
 
     <div class="client-listing__container">
-      <div class="list-items" :class="viewClass">
-      <!-- <div class="folders">
+      <div class="list-items" :class="viewClass" v-loading="!filesStore.getFiles.length">
         <FolderCard v-for="bucket in buckets" :key="bucket.id" :folder="bucket" :data-id="bucket.id" />
-      </div> -->
-        
-        <FileCard v-for="(file, idx) in files" :key="file.id" :idx="idx" :item="file" :data-id="file.id" />
+
+        <!-- <FileCard v-for="(file, idx) in filesStore.getFiles" :key="file.id" :idx="idx" :item="file" :data-id="file.id" /> -->
+
+        <preview :photos="filesStore.getFiles"></preview> 
       </div>
     </div>
 
@@ -62,13 +66,17 @@
       @selectStart="onSelectStart"
       @selectEnd="onSelectEnd"
       @select="onSelect"
-    />    
+    />
+
+    <uploads-list v-if="filesStore.getUploadingFiles.length"></uploads-list>
+
   </div>
 </template>
 
 <script setup>
 import FileCard from '@/components/FileCard.vue'
 import FolderCard from '@/components/FolderCard.vue'
+import UploadsList from '@/components/UploadsList.vue'
 
 import baselineDelete from '~icons/ic/baseline-delete';
 import downloadIcon from '~icons/material-symbols/download';
@@ -96,7 +104,6 @@ import appsIcon from '~icons/mdi/apps'
 import chevronDown from '~icons/mdi/chevron-down'
 
 import { computed, ref, onMounted } from 'vue'
-import { useViewStore } from '../../stores/view' 
 import { useFilesStore } from '../../stores/files' 
 
 import { VueSelecto } from 'vue3-selecto'
@@ -115,7 +122,7 @@ const sortSettings = filesStore.sortSettings
 
 
 const isVideo = ext => ["video/mp4"].includes(ext)
-const isImage = ext => ["image/jpeg"].includes(ext)
+const isImage = ext => ["image/jpeg", "image/png"].includes(ext)
 
 const handleSortSelect = (v) => filesStore.updateSort(v)
 
@@ -137,11 +144,13 @@ const viewClass = computed(() => {
 })
 
 onMounted(async () => {
-  // files.value = 
   await filesStore.fetchFiles()
   await filesStore.fetchBuckets()
+
   files.value = filesStore.getFiles
   buckets.value = filesStore.getBuckets
+
+  // console.log(files.value)
 })
 </script>
 
@@ -158,5 +167,11 @@ onMounted(async () => {
   color: #909399;
   pointer-events: none;
 
+}
+
+.client-listing__container {
+  .el-loading-spinner .path {
+    stroke: #67c23a;
+  }
 }
 </style>
