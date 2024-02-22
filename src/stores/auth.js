@@ -6,11 +6,16 @@ import { handleError } from '@/utils/handleError'
 export const useAuthStore = defineStore('auth', {
   state:() => ({
     user: {},
+    loading: false
   }),
   getters: {
     getUser: state => state.user,
   },
   actions: {
+    setUser(payload) {
+      this.user = payload ? payload.user : null;
+    },
+
     async login() {
       const { error } = await supabase.auth.signInWithPassword({
         email: email.value,
@@ -19,6 +24,10 @@ export const useAuthStore = defineStore('auth', {
   
       if (error) handleError(error)
     },
+
+    /**
+     * Register
+     */    
     async register() {
       const { error } = await supabase.auth.signUp({
         email: email.value,
@@ -27,12 +36,37 @@ export const useAuthStore = defineStore('auth', {
 
       if (error) handleError(error)
     },
-    async logout() {
-      supabase.auth.signOut()
+
+    /**
+     * Send user an email to reset their password
+     * (ie. support "Forgot Password?")
+     */
+    async sendPasswordRestEmail(email) {
+
     },
+
+    async logout() {
+      try {
+        this.loading = true
+        const { error } = await supabase.auth.signOut()
+        if (error) throw error
+      } catch (error) {
+        // alert(error.message)
+      } finally {
+        this.loading = false
+      }
+    },
+    
     async getMe() {
       const { data: { user } } = await supabase.auth.getUser()
-      return user
-    }    
+      this.user = user
+      // console.log( user)
+      // return user
+    },
+
+    async isAuthenticated() {
+      await this.getMe()
+      
+    }
   }
 })

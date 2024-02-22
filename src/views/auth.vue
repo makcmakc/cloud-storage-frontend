@@ -13,13 +13,14 @@
       </div>
 
       <div class="auth-wrapper__right">
-        <!-- <template v-if="authType == '__SIGNIN__'"> -->
+        <template v-if="authType == '__SIGNIN__'">
           <LoginForm @auth-type="updateType" />
-        <!-- </template> -->
+        </template>
 
-        <!-- <template v-if="authType == '__SIGNUP__'">
+        <template v-if="authType == '__SIGNUP__'">
           <RegisterForm @auth-type="updateType" />
-        </template> -->
+
+        </template>
       </div>
 
     </div>
@@ -29,11 +30,30 @@
 <script setup>
 import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
-import { ref, reactive } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { supabase } from '@/core/supabaseClient'
 
-let authType = ref('__SIGNIN__')
+const authType = ref('__SIGNIN__')
 
 const updateType = type => authType.value = type
+
+const session = ref()
+
+onMounted(() => {
+
+  supabase.auth.getSession().then(({ data }) => {
+    session.value = data.session
+  })
+
+  supabase.auth.onAuthStateChange((_, _session) => {
+    session.value = _session
+  })
+
+    document.body.style.background = '#fff'
+})
+onBeforeUnmount(() => {
+  document.body.style.background = ''
+})
 </script>
 
 <style lang="scss">

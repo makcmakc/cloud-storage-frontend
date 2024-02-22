@@ -1,0 +1,68 @@
+.app-auth {
+  &__actions {
+    display: flex;
+    
+    .el-button {
+      width: 100%;
+    }
+  }
+
+  .auth-form__btn {
+    margin-top: 10px;
+  }
+  
+  .app-auth__back-to {
+    width: 100%;
+    margin-top: 1rem;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: #67C23A;
+      color: #67C23A;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #67C23A;
+    }
+  }
+
+  .auth {
+    &-with-github {
+      color: #606266;
+  
+      &:hover {
+        border-color: #24292f;
+        color: #24292f;
+      }
+    }
+  
+    &-with-telegram {
+      color: #606266;
+  
+      &:hover {
+        border-color: #2AABEE;
+        color: #2AABEE;
+      }
+    }
+  
+    &-new-user {
+      color: #606266;
+  
+      img {
+        filter: invert(0.4);
+        transition: filter 0.1s;
+      }
+  
+      &:hover {
+        border-color: #909399;
+        color: #909399;
+  
+        img {
+          filter: invert(0.6);
+          transition: filter 0.1s;
+        }
+      }
+    }
+  }  
+}

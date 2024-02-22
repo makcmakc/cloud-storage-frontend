@@ -1,32 +1,4 @@
 <template>
-  <!-- <div> -->
-    <div class="list-item" v-for="item in photos" :key="item.id">
-      <div class="list-item__icon">
-        <i class="list-item__ext" :class="getColorByExtension(getExtensionFromFileName(item.name))">{{ getExtensionFromFileName(item.name) }}</i>
-          <el-image v-if="isImage(item.metadata.mimetype)"
-            :src="getOriginSource(item)"
-            alt=""
-            fit="scale-down"
-            style="width: 100%"
-            @dblclick="showPreview(item)"
-            class="el-image__inner el-image__preview"
-          />
-          <video v-if="isVideo(item.metadata.mimetype)"
-            :src="getOriginSource(item)"
-            @dblclick="showPreview(item)"
-            style="cursor: pointer"
-            class="el-video__inner el-video__preview"
-          />
-      </div>
-      <div class="list-item__info">
-        <div class="list-item__name"  :data-name="item.metadata.mimetype">
-          <span>{{ item.name }}</span>
-        </div>
-        <div v-if="viewIsList" class="list-item__size">{{ formatFileSize(item.metadata.size, true) }}</div>
-        <div v-if="viewIsList" class="list-item__type">{{ item.metadata.mimetype }}</div>
-      </div>
-    </div>
-    
     <teleport to="body" :disabled="!teleported">
       <transition name="viewer-fade" appear>
         <div v-if="!closed" tabindex="-1" class="el-image-viewer__wrapper" style="z-index: 2005">
@@ -69,6 +41,7 @@
 
           <!-- CANVAS -->
           <div class="el-image-viewer__canvas">
+            <!-- {{  activeIndex  }} -->
             <el-image v-if="isImage(currentItem.metadata.mimetype)"
               :src="getOriginSource(currentItem)"
               class="el-image-viewer__img"
@@ -77,7 +50,7 @@
             />
             <video v-if="isVideo(currentItem.metadata.mimetype)"
               :src="getOriginSource(currentItem)"
-              class="el-image-viewer__img"
+              class="el-video-viewer__video"
               ref="preview"
               style="transform: scale(0.9) rotate(0deg) translate(0px, 0px);max-height: 100%;max-width: 100%;"  
               controls>
@@ -87,17 +60,13 @@
         </div>
       </transition>
     </teleport>
-  <!-- </div> -->
 </template>
 
 <script setup>
-import { computed, ref, toRefs } from 'vue'
-import { supabase } from '@/core/supabaseClient'
-import { useFilesStore } from '../../stores/files'
-import { getExtensionFromFileName } from "@/utils/getExtensionFromFileName.js"
-import { getColorByExtension } from "@/utils/getColorByExtension.js"
-import { formatFileSize } from "@/utils/formatFileSize.js"
 import { isVideo, isImage } from "@/utils/is.js"
+import { computed, ref, toRefs, watch } from "vue"
+import { useFilesStore } from '@/stores/files'
+import { supabase } from '@/core/supabaseClient'
 
 import {
   ArrowLeft,
@@ -111,28 +80,31 @@ import {
   ZoomOut,
 } from '@element-plus/icons-vue'
 
-import { useFullscreen } from '@vueuse/core'
-
-
-const preview = ref(null)
 const publicURL = ref('')
-const currentItem = ref()
-const closed = ref(true)
+
+const closed = ref(false)
+const activeIndex = ref(1)
+const filesStore = useFilesStore()
+const photos = ref([])
 
 
+const emit = defineEmits(['switch'])
+
+
+photos.value = filesStore.getFiles
 
 const { data } = supabase.storage.from('avatars').getPublicUrl('public/')
 publicURL.value = data.publicUrl
 
-const { toggle } = useFullscreen(preview)
 
+const props = defineProps({ current: Object })
+const { current } = toRefs(props)
 
-const props = defineProps({ photos: Object })
+const currentItem = ref(current)
 
-const loading = ref(true)
-const activeIndex = ref(1)
+// currentItem.value = current
 
-const { photos } = toRefs(props)
+// console.log('teleported : ', photos.value)
 
 
 const isSingle = computed(() => {
@@ -154,7 +126,7 @@ function getOriginSource(item) {
 
 function setActiveItem(index) {
   const len = photos.value.length
-  currentItem.value = photos.value[index]
+  // currentItem.value = photos.value[index]
   activeIndex.value = (index + len) % len
 }
 
@@ -185,18 +157,23 @@ function anticlockwise() {
 }
 
 function fullScreen() {
-  toggle()  
+  toggle()
 }
 
 function hide() {
   closed.value = true 
 }
 
-const showPreview = e => {
-  currentItem.value = e
-  closed.value = false
-}
+watch(activeIndex, (val) => {
+  // reset()
+  // console.log(activeIndex, val)
+  // setActiveItem(val)
+  currentItem.value = photos.value[val]
+  emit('switch', val)
+})
+
 </script>
 
 <style>
+
 </style>

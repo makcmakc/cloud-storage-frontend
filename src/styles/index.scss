@@ -2,15 +2,13 @@
 @use "./context-menu";
 @use "./layouts";
 
-
-
-
-
+@use "./overwrite";
 
 @use "./aside";
 @use "./header";
 
 
+@use "pages/index";
 
 
 
@@ -107,6 +105,8 @@ $green: #41b883;
 
 body {
   min-height: 100vh;
+  background: #f4f6f9;
+
   /* color: var(--color-text); */
   /* background: var(--color-background); */
   /* background: #34495e; */
@@ -151,8 +151,8 @@ a {
   padding: 0 20px;
 }
 
-body {
-  background: #f4f6f9;
+.el-button.auth-upload {
+  width: 100% !important;
 }
 
 

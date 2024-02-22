@@ -1,0 +1,39 @@
+
+// .el-input.default--overwrite {
+//   .el-input__wrapper {
+//     &:hover,
+//     &:focus,
+//     &:active {
+//       // border-color: #67C23A;
+//       // color: #67C23A;
+//       // background: none;
+//     }
+  
+//     &:focus-visible {
+//       // outline: 2px solid #67C23A;
+//     }    
+//   }
+// }
+
+.el-button.default--overwrite {
+  width: 100%;
+  background: none;
+  color: #606266;
+  border-color: var(--el-border-color);
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: #67C23A;
+    color: #67C23A;
+    background: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #67C23A;
+  }
+
+  img {
+    color: #67C23A;
+  }
+}

@@ -44,10 +44,11 @@
     </div>
 
     <div class="client-listing__container">
-      <div class="list-items" :class="viewClass" v-loading="!filesStore.getFiles.length">
-        <FolderCard v-for="bucket in buckets" :key="bucket.id" :folder="bucket" :data-id="bucket.id" />
+      <div class="list-items" :class="viewClass" >
+        <!-- v-loading="!filesStore.getFiles.length" -->
+        <!-- <FolderCard v-for="bucket in buckets" :key="bucket.id" :folder="bucket" :data-id="bucket.id" /> -->
 
-        <!-- <FileCard v-for="(file, idx) in filesStore.getFiles" :key="file.id" :idx="idx" :item="file" :data-id="file.id" /> -->
+        <!-- <FileCard v-for="file in filesStore.getFiles" :key="file.id" :item="file" /> -->
 
         <preview :photos="filesStore.getFiles"></preview> 
       </div>
@@ -104,7 +105,7 @@ import appsIcon from '~icons/mdi/apps'
 import chevronDown from '~icons/mdi/chevron-down'
 
 import { computed, ref, onMounted } from 'vue'
-import { useFilesStore } from '../../stores/files' 
+import { useFilesStore } from '@/stores/files' 
 
 import { VueSelecto } from 'vue3-selecto'
 
@@ -121,8 +122,8 @@ const viewSettings = filesStore.viewSettings
 const sortSettings = filesStore.sortSettings
 
 
-const isVideo = ext => ["video/mp4"].includes(ext)
-const isImage = ext => ["image/jpeg", "image/png"].includes(ext)
+// const isVideo = ext => ["video/mp4"].includes(ext)
+// const isImage = ext => ["image/jpeg", "image/png"].includes(ext)
 
 const handleSortSelect = (v) => filesStore.updateSort(v)
 

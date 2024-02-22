@@ -63,10 +63,12 @@ export const useFilesStore = defineStore('files', {
     async fetchFiles() {
       const { data, error } = await supabase
         .storage
-        .from('avatars')
-        .list('public/')
+        .from('storage')
+        .list('images/')
 
       this.files = data
+
+      console.log('data : ', data)
 
       if (error) handleError(error)
 
@@ -75,8 +77,8 @@ export const useFilesStore = defineStore('files', {
     async fetchPhotos() {
       const { data, error } = await supabase
       .storage
-      .from('avatars')
-      .list('public/', {
+      .from('storage')
+      .list('images/', {
         limit: 12
       })
   
@@ -100,8 +102,8 @@ export const useFilesStore = defineStore('files', {
     async fetchPublicURLs() {
       const { data, error } = supabase
         .storage
-        .from('avatars')
-        .getPublicUrl('public/')
+        .from('storage')
+        .getPublicUrl('images/')
 
       this.publicURLs = data
 

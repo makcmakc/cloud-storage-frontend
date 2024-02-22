@@ -55,11 +55,11 @@ console.log('FILES: ', filesStore.getUploadingFiles[0], filePreview.value)
   border-radius: 10px 0px 0 0;
   overflow: hidden;
   z-index: 101;
-  border: 1px solid #EBEEF5;
+  // border: 1px solid #EBEEF5;
 
   &__header {
     background: #67c23a;
-    padding: 10px 20px;
+    padding: 10px 15px 10px 20px;
     color: #fff;
     display: flex;
     align-items: center;

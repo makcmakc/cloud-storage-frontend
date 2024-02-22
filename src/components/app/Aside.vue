@@ -11,7 +11,7 @@
       </RouterLink>
       <RouterLink to="/photos" class="app-aside__nav-link">
         <imageMultiple style="font-size: 1em" />
-        <span>Фото</span>
+        <span>Галерея</span>
       </RouterLink>
       <RouterLink to="/trash" class="app-aside__nav-link">
         <deleteOutline style="font-size: 1em" />
@@ -100,7 +100,6 @@ import UploadButton from './UploadButton.vue'
 import fileIcon from '~icons/mdi/file'
 import imageMultiple from '~icons/mdi/image-multiple'
 import deleteOutline from '~icons/mdi/delete-outline'
-import chevronRight from '~icons/mdi/chevron-right'
 import sharpAddchart from '~icons/ic/sharp-addchart'
 import audioIcon from '~icons/gridicons/audio'
 import otherIcon from '~icons/icon-park-outline/other'
@@ -108,6 +107,7 @@ import playBoxMultiple from '~icons/mdi/play-box-multiple';
 
 
 import { formatFileSize } from "@/utils/formatFileSize.js"
+import { isImage, isVideo } from "@/utils/is.js"
 import { supabase } from '@/core/supabaseClient'
 import { onMounted, computed, ref } from 'vue'
 
@@ -125,15 +125,6 @@ const filesSize = ref(null)
 const storageVolume = ref(1000000000)
 
 
-// const notification = useNotification()
-// notification.warning({
-//   content: 'What to say?',
-//   meta: "I don't know",
-//   duration: 2000,
-//   keepAliveOnHover: true
-// })
-
-
 const getBucket = async () => {
   const { data, error } = await supabase
     .storage
@@ -148,10 +139,12 @@ const sortedData = async () => {
 
   let images = []
   let videos = []
+  let documents = []
+  let other = []
 
   let sorted = await bucket.data.map(el => {
-    if (el.metadata.mimetype === 'image/jpeg') images.push(el.metadata.size)
-    if (el.metadata.mimetype === 'video/mp4') videos.push(el.metadata.size)
+    if (isImage(el.metadata.mimetype)) images.push(el.metadata.size)
+    if (isVideo(el.metadata.mimetype)) videos.push(el.metadata.size)
 
     imagesSize.value = images.reduce((a, b) => a + b, 0)
     videosSize.value = videos.reduce((a, b) => a + b, 0)

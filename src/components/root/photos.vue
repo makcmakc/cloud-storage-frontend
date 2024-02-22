@@ -1,6 +1,13 @@
 <template>
   <div class="client-listing">
     <div class="client-listing__container">
+
+      <div class="client-listing__head">
+      <div class="client-listing__heading">
+        <h1 class="client-listing__heading-title">Галерея</h1>
+      </div>
+      </div>
+
       <div class="container">
         <!-- <div class="list-items" :class="viewClass">
           <FileCard v-for="item in photos" :key="item.id" :item="item" :data-id="item.id" />
@@ -126,7 +133,7 @@ import FileCard from '@/components/FileCard.vue';
 import { computed, ref, onMounted } from 'vue'
 
 import { supabase } from '@/core/supabaseClient'
-import { useViewStore } from '../../stores/view';
+import { useFilesStore } from '@/stores/files' 
 
 const photos = ref([])
 
@@ -191,7 +198,7 @@ const handleClose = (e) => {
 }
 
 
-const viewStore = useViewStore()
+const viewStore = useFilesStore()
 
 const viewClass = computed(() => {
   return  viewStore.view === 'by-tile' ? 'list-items--by-tile' : 'list-items--by-list'

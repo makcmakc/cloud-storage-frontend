@@ -1,98 +1,109 @@
 <template>
   <header>
     <div class="wrapper">
-      <div class="app-header">
-        <router-link to="/" class="app-logo">
-          <div class="app-logo__icon">
-            <appleIcloud style="font-size: 2em; stroke: #67c23a; fill: #fff;" />
-          </div>
-          <div class="app-logo__title">Cloud Storage</div>
-        </router-link>
+      <div class="header">
+        
+        <div class="header-left">
+          <router-link to="/" class="header__logo">
+            <div class="header__logo-icon">
+              <appleIcloud style="font-size: 2em; stroke: #67c23a; fill: #fff;" />
+            </div>
+            <div class="header__logo-title">Cloud Storage</div>
+          </router-link>
+        </div>
 
-        <div class="app-settings">
-          <div class="app-header__profile">
 
-            <el-avatar :size="40" fit="cover" @click="drawer = true" src="https://www.kino-teatr.ru/movie/kadr/147388/1035815.jpg">
-              <img
-                src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
-              />
-            </el-avatar>
+        <div class="header-right">
+          <div class="app-settings">
 
-            <el-drawer v-model="drawer" title="Профиль" :with-header="true">
-              <div class="profile__head" style="padding-bottom: 10px">
-                <div class="profile__head-info">
-                  <div class="profile__head-avatar">
-                    <el-avatar :size="100" fit="cover" src="https://www.kino-teatr.ru/movie/kadr/147388/1035815.jpg">
-                      <img
-                        src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
-                      />
-                    </el-avatar>
+            <div class="app-header__settings">
+              <el-icon><Setting /></el-icon>
+            </div>
+
+            <div class="app-header__profile">
+
+              <el-avatar :size="40" fit="cover" @click="drawer = true" src="https://www.kino-teatr.ru/movie/kadr/147388/1035815.jpg">
+                <img
+                  src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
+                />
+              </el-avatar>
+
+              <el-drawer v-model="drawer" size="25%" title="Профиль" :with-header="true">
+                <div class="profile__head" style="padding-bottom: 10px">
+                  <div class="profile__head-info">
+                    <div class="profile__head-avatar">
+                      <el-avatar :size="100" fit="cover" src="https://www.kino-teatr.ru/movie/kadr/147388/1035815.jpg">
+                        <img
+                          src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
+                        />
+                      </el-avatar>
+                    </div>
+                  <div class="profile__head-desc">
+                      <div>Полное имя: <span>{{ user.fullName }}</span>Maximus</div>
+                      <div>E-mail: <span>{{ user.email }}</span></div>
+                      <div>ID: <span>{{ user.id }}</span></div>
+                    </div>
                   </div>
-                <div class="profile__head-desc">
-                    <p>Полное имя: <strong>{{ userData.fullName }}</strong></p>
-                    <p><strong>{{ user.email }}</strong></p>
-                    <p>ID: <strong>{{ user.email }}</strong></p>
-                  </div>
+                  <div class="profile__head-action">
+                    <el-button>
+                      <baselineExitToApp />
+                      <span style="margin-left: 10px">Выйти</span>
+                    </el-button>
+                  </div>   
                 </div>
-                <div class="profile__head-action">
-                  <el-button>
-                    <baselineExitToApp />
-                    <span style="margin-left: 10px">Выйти</span>
-                  </el-button>
-                </div>   
-              </div>
 
-              <el-divider>Хранилище</el-divider>
+                <el-divider>Хранилище</el-divider>
 
-              <div class="profile__body" style="padding-bottom: 10px">
-                <Doughnut :data="data" :options="options" />
-              </div>
+                <div class="profile__body" style="padding-bottom: 10px">
+                  <Doughnut :data="data" :options="options" />
+                </div>
 
-              <el-divider style="padding-bottom: 10px">Статистика</el-divider>
+                <el-divider style="padding-bottom: 10px">Статистика</el-divider>
 
-              <div class="statistics" style="background: #EBEDF0; padding: 10px; margin-bottom: 35px">
-                <div class="statistic-card">
-                  <el-statistic :value="72000" title="New transactions today">
-                    <template #title>
-                      <div style="display: inline-flex; align-items: center">
-                          Monthly Active Users
-                          <el-tooltip
-                            effect="dark"
-                            content="Number of users who logged into the product in one month"
-                            placement="top"
-                          >
-                            <el-icon style="margin-left: 4px" :size="12">
-                              <Warning />
-                            </el-icon>
-                          </el-tooltip>
-                        </div>
-                    </template>
-                  </el-statistic>
-                  <div class="statistic-footer">
-                    <div class="footer-item">
-                      <span>than yesterday</span>
-                      <span class="green">
-                        16%
-                        <el-icon>
-                          <CaretTop />
+                <div class="statistics" style="background: #EBEDF0; padding: 10px; margin-bottom: 35px">
+                  <div class="statistic-card">
+                    <el-statistic :value="72000" title="New transactions today">
+                      <template #title>
+                        <div style="display: inline-flex; align-items: center">
+                            Monthly Active Users
+                            <el-tooltip
+                              effect="dark"
+                              content="Number of users who logged into the product in one month"
+                              placement="top"
+                            >
+                              <el-icon style="margin-left: 4px" :size="12">
+                                <Warning />
+                              </el-icon>
+                            </el-tooltip>
+                          </div>
+                      </template>
+                    </el-statistic>
+                    <div class="statistic-footer">
+                      <div class="footer-item">
+                        <span>than yesterday</span>
+                        <span class="green">
+                          16%
+                          <el-icon>
+                            <CaretTop />
+                          </el-icon>
+                        </span>
+                      </div>
+                      <div class="footer-item">
+                        <el-icon :size="14">
+                          <ArrowRight />
                         </el-icon>
-                      </span>
+                      </div>
                     </div>
-                    <div class="footer-item">
-                      <el-icon :size="14">
-                        <ArrowRight />
-                      </el-icon>
-                    </div>
-                  </div>
-                </div> 
-              </div>
-              
-               <el-divider style="padding-bottom: 10px">Доп. инфо</el-divider>
+                  </div> 
+                </div>
+                
+                <el-divider style="padding-bottom: 10px">Доп. инфо</el-divider>
 
-               <p>Project Name: <strong>cloud-storage</strong></p>
-              
-            </el-drawer>
+                <p>Project Name: <strong>cloud-storage</strong></p>
+                
+              </el-drawer>
 
+            </div>
           </div>
         </div>
       </div>
@@ -114,18 +125,22 @@ import {
   CaretBottom,
   CaretTop,
   Warning,
+  Setting
 } from '@element-plus/icons-vue'
 
 
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { Doughnut } from 'vue-chartjs'
+
+
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth' 
 
 const authStore = useAuthStore()
 
-const userData = ref('')
-const router = useRouter()
-const user = ref('')
+// const router = useRouter()
+
 
 const drawer = ref(false)
 
@@ -154,8 +169,7 @@ const variantColor = (i, transparency = 1) => {
   return `rgba(${c[0]},${c[1]},${c[2]}, ${transparency})`;
 }
 
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import { Doughnut } from 'vue-chartjs'
+
 ChartJS.register(ArcElement, Tooltip, Legend)
 const data = ref({
   labels: ['Images', 'Documents', 'Audio', 'Video'],
@@ -186,10 +200,12 @@ const options = ref({
 })
 
 
+const user = ref('')
 
-onMounted(async () => {
-  // user.value = await authStore.getMe()
-  // console.log(user.value)
+onMounted(() => {
+  // authStore.getMe()
+  // user.value = authStore.getUser
+  // console.log()
 })
 </script>
 
@@ -198,6 +214,8 @@ onMounted(async () => {
 :global(h2#card-usage ~ .example .example-showcase) {
   background-color: var(--el-fill-color) !important;
 }
+
+
 
 .el-statistic {
   --el-statistic-content-font-size: 28px;
@@ -239,6 +257,16 @@ onMounted(async () => {
   color: var(--el-color-error);
 }
 
+.header {
+
+  &-left {
+
+  }
+
+  &-right {
+    margin-left: auto;
+  }
+}
 
 
 header {
@@ -283,15 +311,42 @@ header {
   margin-bottom: 20px;
 }
 
-
-.app-header {
+.header {
   display: flex;
   align-items: center;
   height: 60px;
+
+  .app-header__settings {
+    margin-right: 10px;
+
+    i {
+      font-size: 22px;
+    }
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    color: #000;
+    width: max-content;
+
+    &-icon {
+      margin-right: 10px;
+      color: #fff;
+    }
+
+    &-title {
+      font-weight: 500;
+      font-size: 18px;
+      color: #303133;
+    }
+  }
 }
 
 .app-settings {
   margin-left: auto;
+  display: flex;
+  align-items: center;
 
   &__content {
     position: absolute;
@@ -304,52 +359,5 @@ header {
     padding: 10px;
     z-index: 99;
   }
-}
-
-.app-logo {
-  display: flex;
-  align-items: center;
-  color: #000;
-  width: max-content;
-
-  &__icon {
-    margin-right: 10px;
-    color: #fff;
-  }
-
-  &__title {
-    font-weight: 500;
-    font-size: 18px;
-    color: #303133;
-  }
-}
-
-.action-bar__anchor {
-  margin-right: 10px;
-}
-
-.app-action-bar {
-  --layout-outer-margin: 20px;
-
-  width: auto;
-  left: var(--layout-outer-margin);
-  right: calc(var(--layout-outer-margin) - 100vw + 100%);
-  border-radius: 0 0 12px 12px;
-  position: fixed;
-  top: 0;
-  color: #fff;
-  background-color: #222;
-  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.15);
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 18px;
-  height: 60px;
-  transition: opacity 0.3s ease;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 50;
 }
 </style>

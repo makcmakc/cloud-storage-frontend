@@ -8,10 +8,14 @@ import { supabase } from '@/core/supabaseClient'
 //   // return (await axios.post('/auth/login', values)).data
 // }
 
-// export const register = async values => {
-//   console.log('Register data', values)
-//   return (await axios.post('/auth/register', values)).data
-// }
+export const register = async values => {
+  console.log('Register data', values)
+  return (await axios.post('/auth/register', values)).data
+}
+
+export const update = async values => {
+  
+}
 
 export const getMe = async () => {
   const { data: { user } } = await supabase.auth.getUser()
