@@ -60,7 +60,7 @@ export const useAuthStore = defineStore('auth', {
     async getMe() {
       const { data: { user } } = await supabase.auth.getUser()
       this.user = user
-      // console.log( user)
+      console.log( user)
       // return user
     },
 

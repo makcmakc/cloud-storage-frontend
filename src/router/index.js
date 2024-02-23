@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import { loadLayoutMiddleware } from "../middleware/layout.middleware"
 import { supabase } from '@/core/supabaseClient'
 
 const router = createRouter({
@@ -11,71 +11,53 @@ const router = createRouter({
         return 'files'
       }
     },
-    // {
-    //   path: '/files',
-    //   name: 'files',
-    //   children: [
-
-    //   ]
-    // },
     {
-      path: '/client/:route',
-      name: 'client',
-      component: () => import('../views/client.vue'),
-      meta: {
-        auth: true,
-      },
-      children: [
-        {
-          path: '/files',
-          name: 'files',
-          component: () => import('../components/root/files.vue'),
-        },
-        // {
-        //   path: '/folder/:id',
-        //   name: 'folder',
-        //   component: () => import('../components/root/folder.vue'),
-        // },         
-        {
-          path: '/photos',
-          name: 'photos',
-          component: () => import('../components/root/photos.vue'),
-        },    
-        {
-          path: '/trash',
-          name: 'trash',
-          component: () => import('../components/root/trash.vue'),
-          meta: {
-            title: 'Корзина',
-          }
-        }        
-      ]
+      path: '/files',
+      name: 'files',
+      component: () => import('../components/root/files.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/photos',
+      name: 'photos',
+      component: () => import('../components/root/photos.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/trash',
+      name: 'trash',
+      component: () => import('../components/root/trash.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/auth',
-      name: 'auth',
-      meta: {
-        auth: false,
-      },      
-      component: () => import('../views/auth.vue')
-    },       
+      name: 'auth',   
+      component: () => import('../views/auth.vue'),
+      meta: { requiresAuth: false, layout: 'empty' }
+    },
   ]
 })
 
 
-
+// Add middleware to router
+router.beforeEach(loadLayoutMiddleware);
 
 // Route guard for auth routes
-router.beforeEach(async (to) => {
+router.beforeEach(async (to, from, next) => {
 
-  // const { data: { user } } = await supabase.auth.getUser()
-  // console.log(user)
+  const user = await supabase.auth.getSession()
 
-  // here we check it the user is logged in
-  // if they aren't and the route requries auth we redirect to the login page
-  // if (!user && to.meta.auth) {
-  //   return { name: "auth" };
-  // }
+  if (to.meta.requiresAuth) {
+    // here we check it the users is logged in
+    // if they aren't and the route requries auth we redirect to the auth page
+    if (!user.data.session) next({ path: '/auth' })
+    else next()
+  }
+  if (!to.meta.requiresAuth) {
+    if (user.data.session) next({ path: '/files' })
+    else next()
+  }  
+  else next()
 });
 
 export default router

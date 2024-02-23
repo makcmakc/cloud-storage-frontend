@@ -13,16 +13,16 @@
         <imageMultiple style="font-size: 1em" />
         <span>Галерея</span>
       </RouterLink>
-      <RouterLink to="/trash" class="app-aside__nav-link">
+      <!-- <RouterLink to="/trash" class="app-aside__nav-link">
         <deleteOutline style="font-size: 1em" />
         <span>Корзина</span>
-      </RouterLink>
+      </RouterLink> -->
     </nav>
 
     <div class="app-aside__info">
       <div class="info-space">
         <div class="info-space__header">
-          <el-collapse arrow-placement="right" class="info-space__collapse">      
+          <el-collapse arrow-placement="right" class="info-space__collapse" :class="{'is-empty': isEmpty}">      
             <el-collapse-item title="Storage">
               <template #title>
                 <el-icon class="info-space__header-icon">
@@ -125,6 +125,9 @@ const filesSize = ref(null)
 const storageVolume = ref(1000000000)
 
 
+const isEmpty = computed(() => filesSize.value === 0)
+
+
 const getBucket = async () => {
   const { data, error } = await supabase
     .storage
@@ -165,14 +168,22 @@ onMounted(async () => {
   let data = await getBucket()
   const s = await data.data.map(el => el.metadata.size).reduce((a, b) => a + b, 0)
   filesSize.value = s
-
   sortedData()
 })
 </script>
 
-<style lang="scss">
-.app-aside__upload .n-button,
-.app-aside__upload .n-upload-trigger {
-  width: 100% !important;
+<style lang="scss">  
+.info-space__collapse.is-empty {
+  .el-collapse-item {
+
+    &__header {
+      pointer-events: none;
+    }
+
+    .el-icon.el-collapse-item__arrow,
+    .el-collapse-item__wrap {
+      display: none;
+    }
+  }
 }
 </style>

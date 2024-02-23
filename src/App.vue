@@ -1,9 +1,16 @@
 <template>
-    <router-view />
+  <AppLayout>
+    <RouterView />
+  </AppLayout>
 </template>
 
 
 <script setup>
+import { RouterView } from "vue-router";
+import AppLayout from "@/layouts/AppLayout.vue";
+
+
+// import client from './views/client.vue'
 // import { supabase } from '@/core/supabaseClient'
 // import { useAuthStore } from '@/stores/auth' 
 // import { ref } from 'vue';

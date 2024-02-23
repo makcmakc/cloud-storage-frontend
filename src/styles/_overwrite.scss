@@ -1,20 +1,3 @@
-
-// .el-input.default--overwrite {
-//   .el-input__wrapper {
-//     &:hover,
-//     &:focus,
-//     &:active {
-//       // border-color: #67C23A;
-//       // color: #67C23A;
-//       // background: none;
-//     }
-  
-//     &:focus-visible {
-//       // outline: 2px solid #67C23A;
-//     }    
-//   }
-// }
-
 .el-button.default--overwrite {
   width: 100%;
   background: none;
@@ -36,4 +19,17 @@
   img {
     color: #67C23A;
   }
+}
+
+.el-dropdown {
+  .el-button:hover,
+  .el-button:focus {
+    border-color: #67c23a !important;
+    color: #67c23a;
+  }
+}
+
+.el-dropdown-menu__item:not(.is-disabled):focus {
+  background-color: #f0f9eb !important;
+  color: #67C23A !important;
 }

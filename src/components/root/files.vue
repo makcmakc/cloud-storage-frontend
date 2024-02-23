@@ -23,6 +23,7 @@
             </template>
           </el-dropdown>                          
         </span>
+
         <span class="settings-by-type">
           <el-dropdown @command="handleSortSelect" trigger="click">
             <el-button plain>
@@ -44,12 +45,7 @@
     </div>
 
     <div class="client-listing__container">
-      <div class="list-items" :class="viewClass" >
-        <!-- v-loading="!filesStore.getFiles.length" -->
-        <!-- <FolderCard v-for="bucket in buckets" :key="bucket.id" :folder="bucket" :data-id="bucket.id" /> -->
-
-        <!-- <FileCard v-for="file in filesStore.getFiles" :key="file.id" :item="file" /> -->
-
+      <div class="list-items" :class="viewClass">
         <preview :photos="filesStore.getFiles"></preview> 
       </div>
     </div>

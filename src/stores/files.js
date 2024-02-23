@@ -63,12 +63,12 @@ export const useFilesStore = defineStore('files', {
     async fetchFiles() {
       const { data, error } = await supabase
         .storage
-        .from('storage')
-        .list('images/')
+        .from('images')
+        .list('/')
 
       this.files = data
 
-      console.log('data : ', data)
+      console.log('data : ', data, this.files)
 
       if (error) handleError(error)
 
@@ -79,7 +79,7 @@ export const useFilesStore = defineStore('files', {
       .storage
       .from('storage')
       .list('images/', {
-        limit: 12
+        // limit: 12
       })
   
       // this.photos = data.filter(el => isImage(el.metadata.mimetype) )

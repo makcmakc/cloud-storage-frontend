@@ -79,24 +79,9 @@ const handleSwitchAuth = () => emit('auth-type', '__SIGNUP__')
 
 // Customization of default Element Input
 // TODO: rewrite it in a better way
-const focusInput = e => {
-  e.target.parentNode.style.boxShadow = "0 0 0 1px #67C23A inset";
+const focusInput = e =>  e.target.parentNode.style.boxShadow = "0 0 0 1px #67C23A inset";
+const blurInput = e => e.target.parentNode.style.boxShadow = "0 0 0 1px #dcdfe6 inset";
 
-  setTimeout(() => {
-    if (e.target.parentNode.parentNode.parentNode.parentNode.classList.contains('is-error')) {
-      e.target.parentNode.style.boxShadow = "0 0 0 1px #f56c6c inset";
-    }
-  }, 0)
-}
-const blurInput = e => {
-  e.target.parentNode.style.boxShadow = "0 0 0 1px #dcdfe6 inset"
-
-  setTimeout(() => {
-    if (e.target.parentNode.parentNode.parentNode.parentNode.classList.contains('is-error')) {
-      e.target.parentNode.style.boxShadow = "0 0 0 1px #f56c6c inset";
-    }
-  }, 0)
-}
 
 const handleOAuthTelegram = () => {
 

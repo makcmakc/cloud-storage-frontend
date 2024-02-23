@@ -49,7 +49,6 @@
               @blur="blurInput($event)"              
             />
             <StrengthMeter
-              size="large"
               v-model:value="ruleForm.password"
               @score-change="scoreChange"
             />
@@ -69,19 +68,12 @@
             @blur="blurInput($event)"             
           />
         </el-form-item>
-        
-        <!-- <el-form-item prop="avatar" class="auth-form__fieldset">
-           <el-button size="large" class="default--overwrite" plain @click="submitUpload">
-            <el-icon class="el-icon--left"><PictureFilled /></el-icon>Upload avatar
-          </el-button> 
-          <AvatarUpload v-model:path="ruleForm.avatar_url" @upload="updateProfile" size="10"/>
-        </el-form-item>         -->
 
         <el-button
           type="success"
           attr-type="submit"
           :loading="loading"
-          @click="createUser"
+          @click="handleSignUp"
           size="large"
           class="auth-form__btn"
           >
@@ -89,6 +81,9 @@
         </el-button>
       </el-form>
     </div>
+    
+    <el-button @click="seeUser">seeUser</el-button>
+    <el-button @click="logout">logout</el-button>
 
     <div class="app-auth__footer">
       <el-button
@@ -110,7 +105,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Message, Lock, User, PictureFilled } from '@element-plus/icons-vue'
 import { onMounted, reactive, ref, toRefs } from 'vue'
-import AvatarUpload from './AvatarUpload.vue'
+// import AvatarUpload from './AvatarUpload.vue'
 
 const ruleFormRef = ref()
 const loading = ref(false)
@@ -119,7 +114,7 @@ const passwordScore = ref(0)
 const router = useRouter()
 const emit = defineEmits()
 
-const user = ref()
+// const user = ref()
 
 
 const props = defineProps(['session'])
@@ -137,63 +132,59 @@ const ruleForm = reactive({
   email: '',
   fullName: '',
   password: '',
-  checkPass: '',
+  checkPassword: '',
   avatar_url: ''
 })
 
-async function getProfile() {
+// async function getProfile() {
+//   try {
+//     loading.value = true
+//     const { user } = session.value
+
+//     const { data, error, status } = await supabase
+//       .from('profiles')
+//       .select(`full_name, email, password, avatar_url`)
+//       .eq('id', user.id)
+//       .single()
+
+//     if (error && status !== 406) throw error
+
+//     if (data) {
+//       console.log('Get profile DATA : ', data)
+//       // username.value = data.username
+//       // website.value = data.website
+//       // avatar_url.value = data.avatar_url
+//     }
+//   } catch (error) {
+//     alert('getProfile - ' + error.message)
+//   } finally {
+//     loading.value = false
+//   }
+// }
+
+
+
+const scoreChange = score => passwordScore.value = score
+const handleSwitchAuth = () => emit('auth-type', '__SIGNIN__')
+
+async function handleSignUp() {
   try {
-    loading.value = true
-    const { user } = session.value
-
-    const { data, error, status } = await supabase
-      .from('profiles')
-      .select(`full_name, email, password, avatar_url`)
-      .eq('id', user.id)
-      .single()
-
-    if (error && status !== 406) throw error
-
-    if (data) {
-      console.log('Get profile DATA : ', data)
-      // username.value = data.username
-      // website.value = data.website
-      // avatar_url.value = data.avatar_url
-    }
-  } catch (error) {
-    alert('getProfile - ' + error.message)
-  } finally {
-    loading.value = false
-  }
-}
-
-async function createUser() {
-  console.log(ruleForm.password)
-  try {
-    // const { data, error } = await supabase.auth.signUp({
-    //   email: ruleForm.email,
-    //   full_name: ruleForm.fullName,
-    //   password: ruleForm.password,
-    //   avatar_url: ruleForm.avatar_url,
-    //   updated_at: new Date(),
-    // })
-
-    const updates  = {
-      id: crypto.randomUUID(),
+    const { data, error } = await supabase.auth.signUp({
       email: ruleForm.email,
-      full_name: ruleForm.fullName,
       password: ruleForm.password,
-      avatar_url: ruleForm.avatar_url,
-      updated_at: new Date(),      
-    }
+      options: {
+        data: {
+          full_name: ruleForm.fullName,
+        }
+      }
+    })
 
-    console.log(updates)
-
-        const { error } = await supabase.from('profiles').upsert(updates)
+    console.log('auth data', data)
     
-        if (error) throw error
+    if (error) throw error
 
-    // if (error) throw error
+    router.push('/')
+
   } catch (error) {
     alert('Alert err : ' + error.message)
   } finally {
@@ -201,31 +192,19 @@ async function createUser() {
   }
 }
 
-async function updateProfile() {
-      // try {
-      //   loading.value = true
-      //   const { user } = session.value
-    
-      //   const updates = {
-      //     id: user.id,
-      //     email: ruleForm.email,
-      //     full_name: ruleForm.fullName,
-      //     password: ruleForm.password,
-      //     avatar_url: ruleForm.avatar_url,
-      //     updated_at: new Date(),
-      //   }
 
-      //   console.log(updates)
-    
-      //   const { error } = await supabase.from('profiles').upsert(updates)
-    
-      //   if (error) throw error
-      // } catch (error) {
-      //   alert('Alert err : ' + error.message)
-      // } finally {
-      //   loading.value = false
-      // }
-    }
+const seeUser = async () => {
+ const lu = await supabase.auth.getSession()
+ console.log(lu)
+}
+
+const logout = async () => {
+  const { error } = await supabase.auth.signOut()
+
+  if (error) throw error
+
+  console.log('logout')
+}
 
 
 
@@ -235,7 +214,7 @@ const focusInput = e => {
   e.target.parentNode.style.boxShadow = "0 0 0 1px #67C23A inset";
 
   setTimeout(() => {
-    if (e.target.parentNode.parentNode.parentNode.parentNode.classList.contains('is-error')) {
+    if (e.target?.parentNode?.parentNode?.parentNode?.parentNode?.classList?.contains('is-error')) {
       e.target.parentNode.style.boxShadow = "0 0 0 1px #f56c6c inset";
     }
   }, 0)
@@ -244,86 +223,84 @@ const blurInput = e => {
   e.target.parentNode.style.boxShadow = "0 0 0 1px #dcdfe6 inset"
 
   setTimeout(() => {
-    if (e.target.parentNode.parentNode.parentNode.parentNode.classList.contains('is-error')) {
+    if (e.target?.parentNode?.parentNode?.parentNode?.parentNode?.classList?.contains('is-error')
+    || e.target?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.classList?.contains('is-error')) {
       e.target.parentNode.style.boxShadow = "0 0 0 1px #f56c6c inset";
     }
   }, 0)
 }
 
 
+// validation
+const validatePassword = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('Пожалуйста введите пароль'))
+  } else if (passwordScore.value < 3) {
+    callback(new Error('Слишком слабый пароль'))
+  } else {
+    if (ruleForm.checkPassword !== '') {
+      if (!ruleFormRef.value) return
+      ruleFormRef.value.validateField('checkPassword', () => null)
+    }
+    callback()
+  }
+}
 
-// const scoreChange = score => passwordScore.value = score
-// const handleSwitchAuth = () => emit('auth-type', '__SIGNIN__')
+const validatePasswordConfirm = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('Пожалуйста повторите пароль'))
+  } else if (value !== ruleForm.password) {
+    callback(new Error("Пароли не совпадают!"))
+  } else {
+    callback()
+  }
+}
 
-// const validatePassword = (rule, value, callback) => {
-//   if (value === '') {
-//     callback(new Error('Пожалуйста введите пароль'))
-//   } else if (passwordScore.value < 3) {
-//     callback(new Error('Слишком слабый пароль'))
-//   } else {
-//     if (ruleForm.checkPass !== '') {
-//       if (!ruleFormRef.value) return
-//       ruleFormRef.value.validateField('checkPass', () => null)
-//     }
-//     callback()
-//   }
-// }
+const validateEmail = (rule, value, callback) => {
+  const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
 
-// const validatePasswordConfirm = (rule, value, callback) => {
-//   if (value === '') {
-//     callback(new Error('Пожалуйста повторите пароль'))
-//   } else if (value !== ruleForm.pass) {
-//     callback(new Error("Пароли не совпадают!"))
-//   } else {
-//     callback()
-//   }
-// }
+  if (value === '') {
+    callback(new Error('Пожалуйста введите E-mail'))
+  } else if (!reg.test(ruleForm.email)) {
+    callback(new Error('Пожалуйста введите корректный E-mail'))
+  } else {
+    callback()
+  }
+}
 
-// const validateEmail = (rule, value, callback) => {
-//   const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-
-//   if (value === '') {
-//     callback(new Error('Пожалуйста введите E-mail'))
-//   } else if (!reg.test(ruleForm.email)) {
-//     callback(new Error('Пожалуйста введите корректный E-mail'))
-//   } else {
-//     callback()
-//   }
-// }
-
-// const validateFullName = (rule, value, callback) => {
-//   if (value === '') {
-//     callback(new Error('Пожалуйста введите Full Name'))
-//   } else if (value.length < 3 || value.length > 25) {
-//     callback(new Error('Длина имени должна быть от 3 до 25 символов'))
-//   } else {
-//     callback()
-//   }  
-// }
+const validateFullName = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('Пожалуйста введите Full Name'))
+  } else if (value.length < 3 || value.length > 25) {
+    callback(new Error('Длина имени должна быть от 3 до 25 символов'))
+  } else {
+    callback()
+  }  
+}
 
 
 
-// const rules = reactive({
-//   email: [{ validator: validateEmail, trigger: 'blur' }],
-//   fullName: [{ validator: validateFullName, trigger: 'blur' }],
-//   pass: [{ validator: validatePassword, trigger: 'blur' }],
-//   checkPass: [{ validator: validatePasswordConfirm, trigger: 'blur' }],
-// })
+const rules = reactive({
+  email: [{ validator: validateEmail, trigger: 'blur' }],
+  fullName: [{ validator: validateFullName, trigger: 'blur' }],
+  pass: [{ validator: validatePassword, trigger: 'blur' }],
+  checkPass: [{ validator: validatePasswordConfirm, trigger: 'blur' }],
+})
 
-// const formValidation = async (formEl) => {
-//   try {
-//     await formEl.validate((valid) => {
-//       if (!valid) return
-//       if (valid) {
-//         console.log('submit!')
-//       } else {
-//         console.log('error submit!')
-//         return false
-//       }
-//       // return
-//     })
-//   } catch (e) {}
-// }
+const formValidation = async (formEl) => {
+  try {
+    await formEl.validate((valid) => {
+      if (!valid) return
+      if (valid) {
+        console.log('submit!')
+      } else {
+        console.log('error submit!')
+        return false
+      }
+      // return
+    })
+  } catch (e) {}
+}
 
 const submitForm = async (formEl) => {
 
@@ -335,35 +312,35 @@ const submitForm = async (formEl) => {
     }
   })
 
-  // const data = formValidation(formEl)
-  // if (!data) return
+  const data = formValidation(formEl)
+  if (!data) return
   
-  // console.log('VALID', data)
+  console.log('VALID', data)
 }
 
 
 
-const handleSignUp = async () => {
-  try {
-    loading.value = true
-    const { error } = await supabase.auth.signUp({
-      email: ruleForm.email,
-      password: ruleForm.pass,
-      fullName: ruleForm.fullName
-    })
+// const handleSignUp = async () => {
+//   try {
+//     loading.value = true
+//     const { error } = await supabase.auth.signUp({
+//       email: ruleForm.email,
+//       password: ruleForm.pass,
+//       fullName: ruleForm.fullName
+//     })
 
-    if (error) {
-      console.log(error)
-      return
-    }
+//     if (error) {
+//       console.log(error)
+//       return
+//     }
 
-    router.push('/')
+//     router.push('/')
 
-  } catch (error) {
-    // ElMessage.error('Oops, this is a error message.', error)
-    console.log(error)
-  } finally {
-    loading.value = false
-  }
-}
+//   } catch (error) {
+//     // ElMessage.error('Oops, this is a error message.', error)
+//     console.log(error)
+//   } finally {
+//     loading.value = false
+//   }
+// }
 </script>

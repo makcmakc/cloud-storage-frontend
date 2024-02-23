@@ -8,7 +8,7 @@
 
         <main class="app-content">
           <div class="app-content__inner">
-              <RouterView />
+              <!-- <router-view /> -->
           </div>
         </main>
       </div>
@@ -18,14 +18,14 @@
 
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+// import { RouterLink, RouterView } from 'vue-router'
 import Header from '@/components/app/Header.vue'
 import Aside from '@/components/app/Aside.vue'
 
-import sortReverseVariant from '~icons/mdi/sort-reverse-variant'
-import formatListBulleted from '~icons/mdi/format-list-bulleted'
-import appsIcon from '~icons/mdi/apps'
-import chevronDown from '~icons/mdi/chevron-down'
+// import sortReverseVariant from '~icons/mdi/sort-reverse-variant'
+// import formatListBulleted from '~icons/mdi/format-list-bulleted'
+// import appsIcon from '~icons/mdi/apps'
+// import chevronDown from '~icons/mdi/chevron-down'
 
 </script>
 
