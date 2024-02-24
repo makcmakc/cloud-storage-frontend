@@ -16,24 +16,16 @@ export const useAuthStore = defineStore('auth', {
       this.user = payload ? payload.user : null;
     },
 
-    async login() {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email.value,
-        password: password.value,
-      })
-  
-      if (error) handleError(error)
+    async signIn(email, password) {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error)  handleError(error)
     },
 
     /**
      * Register
      */    
-    async register() {
-      const { error } = await supabase.auth.signUp({
-        email: email.value,
-        password: password.value,
-      })
-
+    async register(email, password) {
+      const { error } = await supabase.auth.signUp({ email, password })
       if (error) handleError(error)
     },
 
@@ -46,15 +38,8 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
-      try {
-        this.loading = true
-        const { error } = await supabase.auth.signOut()
-        if (error) throw error
-      } catch (error) {
-        // alert(error.message)
-      } finally {
-        this.loading = false
-      }
+      const { error } = await supabase.auth.signOut()
+      if (error) handleError(error)
     },
     
     async getMe() {
@@ -66,7 +51,6 @@ export const useAuthStore = defineStore('auth', {
 
     async isAuthenticated() {
       await this.getMe()
-      
     }
   }
 })

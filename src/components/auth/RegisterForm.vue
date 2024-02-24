@@ -82,8 +82,8 @@
       </el-form>
     </div>
     
-    <el-button @click="seeUser">seeUser</el-button>
-    <el-button @click="logout">logout</el-button>
+    <!-- <el-button @click="seeUser">seeUser</el-button> -->
+    <!-- <el-button @click="logout">logout</el-button> -->
 
     <div class="app-auth__footer">
       <el-button
@@ -114,19 +114,10 @@ const passwordScore = ref(0)
 const router = useRouter()
 const emit = defineEmits()
 
-// const user = ref()
-
 
 const props = defineProps(['session'])
 const { session } = toRefs(props)
 
-// console.log(session.value)
-
-// const avatar_url = ref()
-
-// onMounted(() => {
-//   getProfile()
-// })
 
 const ruleForm = reactive({
   email: '',
@@ -135,34 +126,6 @@ const ruleForm = reactive({
   checkPassword: '',
   avatar_url: ''
 })
-
-// async function getProfile() {
-//   try {
-//     loading.value = true
-//     const { user } = session.value
-
-//     const { data, error, status } = await supabase
-//       .from('profiles')
-//       .select(`full_name, email, password, avatar_url`)
-//       .eq('id', user.id)
-//       .single()
-
-//     if (error && status !== 406) throw error
-
-//     if (data) {
-//       console.log('Get profile DATA : ', data)
-//       // username.value = data.username
-//       // website.value = data.website
-//       // avatar_url.value = data.avatar_url
-//     }
-//   } catch (error) {
-//     alert('getProfile - ' + error.message)
-//   } finally {
-//     loading.value = false
-//   }
-// }
-
-
 
 const scoreChange = score => passwordScore.value = score
 const handleSwitchAuth = () => emit('auth-type', '__SIGNIN__')

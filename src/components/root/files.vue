@@ -6,40 +6,48 @@
       </div>
 
       <div class="client-listing__settings">
-        <span class="settings-by-sort">
-          <el-dropdown @command="handleViewSelect" trigger="click">
-           <el-button plain>
-              <span class="el-dropdown-link">
-                <formatListBulleted />
-                <el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
-              </span>             
-           </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item v-for="(view, i) in viewSettings" :class="{'is-title': view.isTitle}" :key="i" :command="view.key">{{ view.label }}</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>                          
-        </span>
-
-        <span class="settings-by-type">
-          <el-dropdown @command="handleSortSelect" trigger="click">
+        
+        <div v-if="screenWidth >= 768">
+          <span class="settings-by-sort">
+            <el-dropdown @command="handleViewSelect" trigger="click">
             <el-button plain>
-              <span class="el-dropdown-link">
-                <sortReverseVariant />
-                <el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
-              </span>
+                <span class="el-dropdown-link">
+                  <formatListBulleted />
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </span>             
             </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item v-for="(sort, i) in sortSettings" :class="{'is-title': sort.isTitle}" :key="i" :command="sort.key">{{ sort.label }}</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>                          
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-for="(view, i) in viewSettings" :class="{'is-title': view.isTitle}" :key="i" :command="view.key">{{ view.label }}</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>                          
+          </span>
+
+          <span class="settings-by-type">
+            <el-dropdown @command="handleSortSelect" trigger="click">
+              <el-button plain>
+                <span class="el-dropdown-link">
+                  <sortReverseVariant />
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </span>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-for="(sort, i) in sortSettings" :class="{'is-title': sort.isTitle}" :key="i" :command="sort.key">{{ sort.label }}</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>                          
+          </span>
+        </div>
+
+        <span class="client-listing__settings client-listing__settings--mobile" v-else>
+          <el-icon class="upload-file"><CirclePlusFilled /></el-icon>
+          <el-icon class="settings-mobile" style="transform: rotate(90deg);"><MoreFilled /></el-icon>
         </span>
       </div>
     </div>
@@ -86,6 +94,13 @@ import linkBold from '~icons/solar/link-bold';
 import starIcon from '~icons/material-symbols/star';
 
 
+
+
+import { useScreenSize } from '@/composables/screenSize.js'
+
+const { screenWidth } = useScreenSize()
+
+
 import {
   ArrowDown,
   Check,
@@ -93,6 +108,7 @@ import {
   CirclePlus,
   CirclePlusFilled,
   Plus,
+  MoreFilled
 } from '@element-plus/icons-vue'
 
 import sortReverseVariant from '~icons/mdi/sort-reverse-variant'

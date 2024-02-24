@@ -1,23 +1,28 @@
-<script setup lang="ts">
+<script setup>
+import NavBar from "@/components/app/NavBar.vue"
+import { useScreenSize } from '@/composables/screenSize.js'
 
+const { screenWidth } = useScreenSize()
 </script>
 
 <template>
-  <div>
-    <Header></Header>
+  <Header></Header>
 
-    <div class="wrapper">
-      <div class="app">
-        <Aside></Aside>
+  <!-- <div class="wrapper"> -->
+    <div class="app">
+      <Aside v-if="screenWidth >= 768"></Aside>
 
-        <main class="app-content">
-          <div class="app-content__inner">
-            <slot></slot>
-          </div>
-        </main>
+      <NavBar v-else></NavBar>
 
-      </div>
-    </div>
+      <!-- <p>Window Width: {{ screenWidth }}</p> -->
+
+      <main class="app-content">
+        <div class="app-content__inner">
+          <slot></slot>
+        </div>
+      </main>
+
+    <!-- </div> -->
   </div>
 </template>
 

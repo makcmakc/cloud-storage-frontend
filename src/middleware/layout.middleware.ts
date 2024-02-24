@@ -5,8 +5,6 @@ export async function loadLayoutMiddleware(route: RouteLocationNormalized): Prom
   const { layout } = route.meta;
   const normalizedLayoutName = layout || AppLayoutsEnum.default;
 
-  console.log(normalizedLayoutName)
-
   const fileName = AppLayoutToFileMap[normalizedLayoutName];
   const fileNameWithoutExtension = fileName.split(".vue")[0];
 

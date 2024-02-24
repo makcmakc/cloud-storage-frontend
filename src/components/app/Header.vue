@@ -121,12 +121,7 @@ const options = ref({
 
 
 const handleLogout = async () => {
-  const { error } = await supabase.auth.signOut()
-
-  if (error) throw error
-
-  console.log('logout')
-
+  await authStore.logout()
   router.push('/auth')
 }
 

@@ -43,7 +43,6 @@
 
     <div class="app-auth__footer">
       <el-divider>OR</el-divider>
-
       <div class="app-auth__actions">
         <el-button type="default" plain class="auth-with-github" @click="handleOAuthGithub">
           <el-icon class="el-icon--left"><img style="width: 15px;" src="@/assets/github.svg"></el-icon>Github
@@ -51,7 +50,7 @@
         <el-button type="default" plain class="auth-with-telegram" @click="handleOAuthTelegram">
           <el-icon class="el-icon--left"><img style="width: 15px;" src="@/assets/telegram.svg"></el-icon>Telegram
         </el-button>     
-        <el-button type="default" plain class="default--overwrite" @click="handleSwitchAuth">
+        <el-button type="default" plain class="auth-signup default--overwrite" @click="handleSwitchAuth">
           <el-icon class="el-icon--left"><User /></el-icon>Sign Up
         </el-button>
       </div>      
@@ -59,83 +58,39 @@
   </div>
 </template>
 
-
 <script setup>
 import { Message, Lock, User } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { supabase } from '@/core/supabaseClient'
-// import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const loading = ref(false)
 const email = ref('')
 const password = ref('')
 
+const router = useRouter()
+const authStore = useAuthStore()
 const emit = defineEmits()
 
-const router = useRouter()
-
 const handleSwitchAuth = () => emit('auth-type', '__SIGNUP__')
-
-// Customization of default Element Input
-// TODO: rewrite it in a better way
-const focusInput = e =>  e.target.parentNode.style.boxShadow = "0 0 0 1px #67C23A inset";
+const focusInput = e => e.target.parentNode.style.boxShadow = "0 0 0 1px #67C23A inset";
 const blurInput = e => e.target.parentNode.style.boxShadow = "0 0 0 1px #dcdfe6 inset";
 
 
-const handleOAuthTelegram = () => {
+const handleOAuthTelegram = () => {}
 
-}
-
-const handleOAuthGithub = () => {
-
-}
-
-// const handleLogin = async () => {
-//   try {
-//     loading.value = true
-//     const { error } = await supabase.auth.signInWithOtp({
-//       email: email.value,
-//     })
-//     if (error) throw error
-//     alert('Check your email for the login link!')
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       alert(error.message)
-//     }
-//   } finally {
-//     loading.value = false
-//   }
-// }
+const handleOAuthGithub = () => {}
 
 const handleSignIn = async () => {
-  try {
-
-    console.log(email.value, password.value)
-    loading.value = true
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.value,
-      password: password.value,
-    })
-
-    if (error) {
-      console.log(error)
-      return
-    }
-
-    router.push('/')
-  } catch (error) {
-    ElMessage.error('Oops, this is a error message.', error)
-    console.log(error)
-  } finally {
-    loading.value = false
-  }
+  loading.value = true;
+  await authStore.signIn(email.value, password.value)
+  loading.value = false
+  router.push('/files')
 }
 </script>
 
-<style lang="scss">
-.el-divider__text {
-  // background: #f4f6f9;
+<style lang="scss" scoped>
+:deep(.el-divider__text) {
   color: #606266;
 }
 </style>

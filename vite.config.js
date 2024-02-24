@@ -10,6 +10,8 @@ import Components from 'unplugin-vue-components/vite'
 
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
+import autoprefixer from 'autoprefixer';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -32,11 +34,20 @@ export default defineConfig({
       '~/': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  worker: {
+    format: 'es'
+  },
   css: {
-    preprocessorOptions: {
-      scss: {
-        // additionalData: `@use "~/styles/element/index.scss" as *;`,
-      },
+    devSourcemap: true,
+    postcss: {
+      plugins: [
+        autoprefixer({}) // add options if needed
+      ]
     },
-  },  
+  //   preprocessorOptions: {
+  //     scss: {
+  //       // additionalData: `@use "~/styles/element/index.scss" as *;`,
+  //     },
+  //   },    
+  } 
 })
