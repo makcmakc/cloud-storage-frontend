@@ -6,7 +6,6 @@
       </div>
 
       <div class="client-listing__settings">
-        
         <div v-if="screenWidth >= 768">
           <span class="settings-by-sort">
             <el-dropdown @command="handleViewSelect" trigger="click">
@@ -44,10 +43,10 @@
             </el-dropdown>                          
           </span>
         </div>
-
+        
         <span class="client-listing__settings client-listing__settings--mobile" v-else>
           <el-icon class="upload-file"><CirclePlusFilled /></el-icon>
-          <el-icon class="settings-mobile" style="transform: rotate(90deg);"><MoreFilled /></el-icon>
+          <SwipeModal />
         </span>
       </div>
     </div>
@@ -58,6 +57,7 @@
       </div>
     </div>
 
+    <!-- <uploads-list v-if="filesStore.getUploadingFiles.length"></uploads-list> -->
     <vue-selecto
       :selectableTargets="['.list-item']"
       :dragContainer="dragContainer"
@@ -71,10 +71,7 @@
       @selectStart="onSelectStart"
       @selectEnd="onSelectEnd"
       @select="onSelect"
-    />
-
-    <uploads-list v-if="filesStore.getUploadingFiles.length"></uploads-list>
-
+      />
   </div>
 </template>
 
@@ -82,6 +79,8 @@
 import FileCard from '@/components/FileCard.vue'
 import FolderCard from '@/components/FolderCard.vue'
 import UploadsList from '@/components/UploadsList.vue'
+
+import SwipeModal from "@/components/app/SwipeModal.vue"
 
 import baselineDelete from '~icons/ic/baseline-delete';
 import downloadIcon from '~icons/material-symbols/download';
@@ -92,6 +91,7 @@ import fileTransferFill from '~icons/ri/file-transfer-fill';
 import shareIcon from '~icons/material-symbols/share';
 import linkBold from '~icons/solar/link-bold';
 import starIcon from '~icons/material-symbols/star';
+
 
 
 

@@ -1,5 +1,4 @@
 .el-button.default--overwrite {
-  width: 100%;
   background: none;
   color: #606266;
   border-color: var(--el-border-color);
@@ -35,6 +34,11 @@
 }
 
 
+
+.el-drawer__close-btn:focus i,
+.el-drawer__close-btn:hover i {
+  color: #67C23A !important;
+}
 
 
 

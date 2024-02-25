@@ -1,0 +1,50 @@
+.header {
+
+  &-left {
+
+  }
+
+  &-right {
+    margin-left: auto;
+  }
+}
+
+
+header {
+  margin-bottom: 20px;
+  width: 100%;
+  // background: #f4f6f9;
+  background: #fff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  height: 60px;
+
+  .app-header__settings {
+    margin-right: 10px;
+
+    i {
+      font-size: 22px;
+    }
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    color: #000;
+    width: max-content;
+
+    &-icon {
+      margin-right: 10px;
+      color: #fff;
+    }
+
+    &-title {
+      font-weight: 500;
+      font-size: 18px;
+      color: #303133;
+    }
+  }
+}

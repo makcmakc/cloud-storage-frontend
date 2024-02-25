@@ -3,12 +3,14 @@
 
     <div class="auth-wrapper">
       <div class="auth-wrapper__left">
-        <div class="auth-img">
-          <!-- <img src="@/assets/cloud.svg" alt=""> -->
-        </div>
-        <div class="auth-desc">
-          My personal meme cloud
-          <!-- The VCloud is the ultimate tool for managing all of your files in one central location. -->
+        <div class="auth-info">
+          <div class="auth-img">
+            <img src="@/assets/auth.png" alt="">
+          </div>
+          <div class="auth-desc">
+            My personal meme cloud
+            <!-- The VCloud is the ultimate tool for managing all of your files in one central location. -->
+          </div>
         </div>
       </div>
 

@@ -146,7 +146,7 @@ a {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    position: relative;
+    // position: relative;
     margin: 15px 0 15px;
 
     @include media(sm2) {
@@ -179,7 +179,7 @@ a {
   &__settings {
     flex-shrink: 0;
     margin-left: auto;
-    position: relative;
+    // position: relative;
 
     &--mobile {
       display: flex;

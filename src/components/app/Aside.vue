@@ -13,10 +13,6 @@
         <imageMultiple style="font-size: 1em" />
         <span>Галерея</span>
       </RouterLink>
-      <!-- <RouterLink to="/trash" class="app-aside__nav-link">
-        <deleteOutline style="font-size: 1em" />
-        <span>Корзина</span>
-      </RouterLink> -->
     </nav>
 
     <div class="app-aside__info">

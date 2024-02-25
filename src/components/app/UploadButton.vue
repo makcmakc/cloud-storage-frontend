@@ -61,28 +61,18 @@ const uploadAvatar = async (evt) => {
 
 <template>
   <div>
-    <!-- <img
-      v-if="src"
-      :src="src"
-      alt="Avatar"
-      class="avatar image"
-      :style="{ height: size + 'em', width: size + 'em' }"
-    /> -->
-    <!-- <div v-else class="avatar no-image" :style="{ height: size + 'em', width: size + 'em' }" /> -->
-
-
-      <label class="el-button el-button--success el-button--large btn--upload" for="single">
-        Загрузить файл
-      </label>
-      <input
-        style="visibility: hidden; position: absolute"
-        type="file"
-        id="single"
-        multiple
-        accept="image/*"
-        @change="uploadAvatar"
-        :disabled="uploading"
-      />
+    <label class="el-button el-button--success el-button--large btn--upload" for="single">
+      Загрузить файл
+    </label>
+    <input
+      style="visibility: hidden; position: absolute"
+      type="file"
+      id="single"
+      multiple
+      accept="image/*"
+      @change="uploadAvatar"
+      :disabled="uploading"
+    />
   </div>
 </template>
 
