@@ -1,6 +1,6 @@
 <template>
   <!-- <div> -->
-    <div class="list-item" v-for="item in photos" :key="item.id">
+    <div class="list-item" v-for="(item, idx) in photos" :key="item.id">
       <div class="list-item__icon">
         <i class="list-item__ext" :class="getColorByExtension(getExtensionFromFileName(item.name))">{{ getExtensionFromFileName(item.name) }}</i>
           <el-image v-if="isImage(item.metadata.mimetype)"
@@ -8,18 +8,18 @@
             alt=""
             fit="scale-down"
             style="width: 100%"
-            @dblclick="showPreview(item)"
+            @dblclick="showPreview(item, idx)"
             class="el-image__inner el-image__preview"
           />
           <video v-if="isVideo(item.metadata.mimetype)"
             :src="getOriginSource(item)"
-            @dblclick="showPreview(item)"
+            @dblclick="showPreview(item, idx)"
             style="cursor: pointer"
             class="el-video__inner el-video__preview"
           />
       </div>
       <div class="list-item__info">
-        <div class="list-item__name"  :data-name="item.metadata.mimetype">
+        <div class="list-item__name" :data-name="item.metadata.mimetype">
           <span>{{ item.name }}</span>
         </div>
         <div v-if="viewIsList" class="list-item__size">{{ formatFileSize(item.metadata.size, true) }}</div>
@@ -93,7 +93,7 @@
 <script setup>
 import { computed, ref, toRefs } from 'vue'
 import { supabase } from '@/core/supabaseClient'
-import { useFilesStore } from '../../stores/files'
+// import { useFilesStore } from '../../stores/files'
 import { getExtensionFromFileName } from "@/utils/getExtensionFromFileName.js"
 import { getColorByExtension } from "@/utils/getColorByExtension.js"
 import { formatFileSize } from "@/utils/formatFileSize.js"
@@ -116,13 +116,15 @@ import { useFullscreen } from '@vueuse/core'
 
 const preview = ref(null)
 const publicURL = ref('')
-const currentItem = ref()
+// const currentItem = ref({})
 const closed = ref(true)
 
 
 
-const { data } = supabase.storage.from('avatars').getPublicUrl('public/')
+
+const { data } = supabase.storage.from('avatars').getPublicUrl('/')
 publicURL.value = data.publicUrl
+
 
 const { toggle } = useFullscreen(preview)
 
@@ -134,6 +136,10 @@ const activeIndex = ref(1)
 
 const { photos } = toRefs(props)
 
+
+const currentItem = computed(() => {
+  return photos.value[activeIndex.value]
+})
 
 const isSingle = computed(() => {
   return photos.value.length <= 1
@@ -147,15 +153,16 @@ const isLast = computed(() => {
   return activeIndex.value === photos.value.length - 1
 })
 
-
 function getOriginSource(item) {
   return publicURL.value + item.name
 }
 
 function setActiveItem(index) {
   const len = photos.value.length
-  currentItem.value = photos.value[index]
+  // console.log((index + len) % len)
   activeIndex.value = (index + len) % len
+  currentItem.value = photos.value[index]
+
 }
 
 function prev() {
@@ -192,8 +199,10 @@ function hide() {
   closed.value = true 
 }
 
-const showPreview = e => {
+const showPreview = (e, idx) => {
+  console.log('E', e, idx)
   currentItem.value = e
+  setActiveItem(idx)
   closed.value = false
 }
 </script>

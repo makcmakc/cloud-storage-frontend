@@ -1,0 +1,20 @@
+.btn-upload {
+  width: 100%;
+
+  &--icon {
+    margin-right: 10px;
+    color: #67C23A;
+    font-size: 30px;
+    line-height: 0;
+    display: block;
+  }
+}
+
+.input-upload {
+  width: 0;
+  height: 0;
+  display: block;
+
+  visibility: hidden;
+  position: fixed;
+}

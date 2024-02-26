@@ -2,9 +2,11 @@
 import { ref, toRefs, watch } from 'vue'
 import { supabase } from '@/core/supabaseClient'
 import { useFilesStore } from '@/stores/files'
-
+import { CirclePlusFilled } from '@element-plus/icons-vue'
+import { useScreenSize } from '@/composables/screenSize.js'
 
 const filesStore = useFilesStore()
+const { screenWidth } = useScreenSize()
 
 
 const prop = defineProps(['path', 'size'])
@@ -15,73 +17,60 @@ const uploading = ref(false)
 const src = ref('')
 const files = ref()
 
-const downloadImage = async () => {
-  try {
-    const { data, error } = await supabase.storage.from('avatars/public').download(path.value)
-    if (error) throw error
-    src.value = URL.createObjectURL(data)
-  } catch (error) {
-    console.error('Error downloading image: ', error.message)
-  }
-}
+// const downloadImage = async () => {
+//   try {
+//     const { data, error } = await supabase.storage.from('avatars/public').download(path.value)
+//     if (error) throw error
+//     src.value = URL.createObjectURL(data)
+//   } catch (error) {
+//     console.error('Error downloading image: ', error.message)
+//   }
+// }
 
-const uploadAvatar = async (evt) => {
-  files.value = evt.target.files
-  try {
-    uploading.value = true
-    if (!files.value || files.value.length === 0) {
-      throw new Error('You must select an image to upload.')
+// Функция для загрузки файлов
+async function uploadFiles(files) {
+  const promises = files.map(async (file) => {
+    const { data, error } = await supabase.storage.from('avatars').upload(file.name, file);
+
+    if (error) {
+      console.error('Ошибка при загрузке файла:', error.message);
+    } else {
+      console.log('Файл успешно загружен:', data);
     }
+  });
 
-    const file = files.value[0]
- 
-    filesStore.uploadFiles(files.value)
-    // const fileExt = file.name.split('.').pop()
-    // const filePath = `${Math.random()}.${fileExt}`
-
-    // const { error: uploadError } = await supabase.storage.from('avatars/public').upload(filePath, file)
-
-    // if (uploadError) throw uploadError
-    // emit('update:path', filePath)
-    // emit('upload')
-
-    // console.log('UPLOAD DONE!!!', file)
-    // await filesStore.fetchFiles()
-  } catch (error) {
-    alert(error.message)
-  } finally {
-    uploading.value = false
-  }
+  await Promise.all(promises);
+  await filesStore.fetchFiles() 
 }
 
-// watch(path, () => {
-//   if (path.value) downloadImage()
-// })
+// Обработчик события выбора файлов
+const uploadAvatar = async (event) => {
+  const files = Array.from(event.target.files);
+  console.log(files)
+  await uploadFiles(files);
+}
+
 </script>
 
 <template>
-  <div>
-    <label class="el-button el-button--success el-button--large btn--upload" for="single">
-      Загрузить файл
+  <span>
+    <label class="el-button el-button--success el-button--large btn-upload" for="upload-input" v-if="screenWidth >= 768">
+      <span>Загрузить файл</span>
     </label>
-    <input
-      style="visibility: hidden; position: absolute"
-      type="file"
-      id="single"
+    <label for="upload-input" class="btn-upload--icon" v-else>
+      <el-icon><CirclePlusFilled /></el-icon>
+    </label>
+
+    <input type="file"
+      class="input-upload"
+      id="upload-input"
       multiple
-      accept="image/*"
       @change="uploadAvatar"
       :disabled="uploading"
     />
-  </div>
+  </span>
 </template>
 
-
-<style lang="scss" scoped>
-:deep(.btn--upload) {
-  width: 100%;
-}
-</style>
 
 
 <!-- <template>

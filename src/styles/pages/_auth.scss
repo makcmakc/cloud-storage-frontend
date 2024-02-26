@@ -219,9 +219,13 @@ body.auth-page {
         flex: 1 1 100%;
       }
     }
+
   }
 
   &__content {
+    .el-button + .el-button {
+      margin-left: 0;
+    }    
   }
 
   &__signup {

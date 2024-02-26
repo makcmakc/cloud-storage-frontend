@@ -3,14 +3,15 @@ import { supabase } from '@/core/supabaseClient'
 import { handleError } from '@/utils/handleError'
 
 export const useFilesStore = defineStore('files', {
-  state:() => ({
+  state: () => ({
+    loading: false,
     files: [],
     buckets: [],
-    publicURLs: [],
     photos: [],
+    uploadingFiles: [],
+    publicURL: '',
     sort: 'by-name',
     view: 'by-tile',
-    uploadingFiles: [],
     sortSettings: [
       {
         label: 'Сортировка',
@@ -51,38 +52,40 @@ export const useFilesStore = defineStore('files', {
     ]
   }),
   getters: {
+    getLoading: state => state.loading,
+    getPublicURL: state => state.publicURL,
     getFiles: state => state.files,
+    getPhotos: state => state.photos,
     getBuckets: state => state.buckets,
     getView: state => state.view,
     getSort: state => state.sort,
     getViewSettings: state => state.viewSettings,
     getSortSettings: state => state.sortSettings,
-    getUploadingFiles: state => state.uploadingFiles
+    getUploadingFiles: state => state.uploadingFiles,
   },
   actions: {
     async fetchFiles() {
-      const { data, error } = await supabase
-        .storage
-        .from('images')
-        .list('/')
-
-      this.files = data
-
-      console.log('data : ', data, this.files)
-
+      this.loading = true
+      const { data, error } = await supabase.storage
+        .from('avatars')
+        .list();
+      
       if (error) handleError(error)
 
-      return data
+      // [BUG]?? supabase creates empty object .emptyFolderPlaceholder
+      // this.files = data.slice(1)
+
+      this.files = data
+  
+      this.loading = false
     },
     async fetchPhotos() {
       const { data, error } = await supabase
       .storage
       .from('storage')
-      .list('images/', {
-        // limit: 12
-      })
+      .list()
   
-      // this.photos = data.filter(el => isImage(el.metadata.mimetype) )
+      this.photos = data.filter(el => isImage(el.metadata.mimetype))
 
       if (error) handleError(error)
 
@@ -91,7 +94,7 @@ export const useFilesStore = defineStore('files', {
     async fetchBuckets() {
       const { data, error } = await supabase
         .storage
-        .listBuckets()
+        .from('avatars')
 
       this.buckets = data
 
@@ -99,15 +102,15 @@ export const useFilesStore = defineStore('files', {
 
       return data
     },
-    async fetchPublicURLs() {
+    async fetchPublicURL() {
       const { data, error } = supabase
         .storage
-        .from('storage')
-        .getPublicUrl('images/')
-
-      this.publicURLs = data
+        .from('avatars')
+        .getPublicUrl('/')
 
       if (error) handleError(error)
+
+      this.publicURL = data
     },
     updateView(payload) {
       this.view = payload

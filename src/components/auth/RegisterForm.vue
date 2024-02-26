@@ -1,7 +1,7 @@
 <template>
   <div class="app-auth">
     <div class="app-auth__header">
-      <h3 class="app-auth__title">Sign Up</h3>
+      <h3 class="app-auth__title enter-x">Sign Up</h3>
     </div>
 
     <div class="app-auth__content">
@@ -11,7 +11,7 @@
         :rules="rules"
         >
 
-        <el-form-item prop="email" class="auth-form__fieldset">
+        <el-form-item prop="email" class="auth-form__fieldset enter-x">
           <el-input
             size="large"
             class="default--overwrite"
@@ -24,7 +24,7 @@
           />
         </el-form-item>
 
-        <el-form-item  prop="fullName" class="auth-form__fieldset">
+        <el-form-item prop="fullName" class="auth-form__fieldset enter-x">
           <el-input
             size="large"
             :prefix-icon="User"
@@ -35,7 +35,7 @@
           />
         </el-form-item >     
 
-        <el-form-item prop="pass" class="enter-x">
+        <el-form-item prop="pass" class="auth-form__fieldset enter-x">
           <div style="width: 100%;">
             <el-input
               v-model="ruleForm.password"
@@ -55,7 +55,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item prop="checkPass" class="enter-x">
+        <el-form-item prop="checkPass" class="auth-form__fieldset enter-x">
           <el-input
             type="password"
             show-password
@@ -69,32 +69,26 @@
           />
         </el-form-item>
 
-        <el-button
+        <el-button class="auth-form__btn enter-x"
           type="success"
           attr-type="submit"
           :loading="loading"
           @click="handleSignUp"
           size="large"
-          class="auth-form__btn"
-          >
+        >
           Sign Up
         </el-button>
+
+        <el-button class="app-auth__back-to enter-x"
+          size="large"
+          plain
+          @click="handleSwitchAuth"
+        >
+          Back to Sign In
+        </el-button>        
       </el-form>
     </div>
-    
-    <!-- <el-button @click="seeUser">seeUser</el-button> -->
-    <!-- <el-button @click="logout">logout</el-button> -->
 
-    <div class="app-auth__footer">
-      <el-button
-        size="large"
-        plain
-        class="app-auth__back-to"
-        @click="handleSwitchAuth"
-      >
-        Back to Sign In
-      </el-button>
-    </div>
   </div>
 </template>
 

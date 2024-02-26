@@ -6,7 +6,7 @@
       />
     </el-avatar>
 
-    <el-drawer v-model="drawer" size="400" title="Профиль" :with-header="true">
+    <el-drawer v-model="drawer" size="320" title="Профиль" :with-header="true">
       <div class="profile" style="padding-bottom: 10px">
         <div class="profile-info">
           <div class="profile-info__avatar">

@@ -1,12 +1,12 @@
 <template>
   <div class="app-auth">
     <div class="app-auth__header">
-      <h3 class="app-auth__title">Sign In</h3>
+      <h3 class="app-auth__title  enter-x">Sign In</h3>
     </div>
 
     <div class="app-auth__content">
       <form class="auth-form">
-        <el-form-item class="auth-form__fieldset">
+        <el-form-item class="auth-form__fieldset enter-x">
           <el-input
             size="large"
             :prefix-icon="Message"
@@ -17,7 +17,7 @@
           />
         </el-form-item>
 
-        <el-form-item class="auth-form__fieldset">
+        <el-form-item class="auth-form__fieldset enter-x">
           <el-input
             type="password"
             show-password
@@ -30,7 +30,7 @@
           />
         </el-form-item>
 
-        <el-button class="auth-form__btn"
+        <el-button class="auth-form__btn enter-x"
           type="success"
           :loading="loading"
           @click="handleSignIn"
@@ -41,7 +41,7 @@
       </form>
     </div>
 
-    <div class="app-auth__footer">
+    <div class="app-auth__footer enter-x">
       <el-divider>OR</el-divider>
       <div class="app-auth__actions">
         <el-button type="default" plain class="auth-with-github" @click="handleOAuthGithub">

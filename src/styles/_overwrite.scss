@@ -1,3 +1,4 @@
+// default button -> PLAIN
 .el-button.default--overwrite {
   background: none;
   color: #606266;
@@ -20,6 +21,7 @@
   }
 }
 
+// dropdown
 .el-dropdown {
   .el-button:hover,
   .el-button:focus {
@@ -34,12 +36,18 @@
 }
 
 
-
+// drawer
 .el-drawer__close-btn:focus i,
 .el-drawer__close-btn:hover i {
   color: #67C23A !important;
 }
 
+// loading
+.app-content.el-loading-parent--relative {
+  .el-loading-spinner .path {
+    stroke: #67C23A ;
+  }
+}
 
 
 // select drag zone styles

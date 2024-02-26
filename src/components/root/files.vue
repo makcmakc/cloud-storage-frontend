@@ -1,5 +1,8 @@
 <template>
-  <div class="client-listing" @dragover="hanleDragover" @dragleave="handleDragleave" @drop="handleDrop">
+  <div class="client-listing"
+    @dragover="hanleDragover"
+    @dragleave="handleDragleave"
+    @drop="handleDrop">
     <div class="client-listing__head">
       <div class="client-listing__heading">
         <h1 class="client-listing__heading-title">Файлы</h1>
@@ -45,7 +48,7 @@
         </div>
         
         <span class="client-listing__settings client-listing__settings--mobile" v-else>
-          <el-icon class="upload-file"><CirclePlusFilled /></el-icon>
+          <UploadButton />
           <SwipeModal />
         </span>
       </div>
@@ -53,12 +56,18 @@
 
     <div class="client-listing__container">
       <div class="list-items" :class="viewClass">
-        <preview :photos="filesStore.getFiles"></preview> 
+        <preview :photos="files"></preview> 
       </div>
     </div>
 
+    <!-- <div v-for="file in files" :key="file.id">
+      {{  file.name }}
+    </div> -->
+
+    <!-- <img src="" alt=""> -->
+
     <!-- <uploads-list v-if="filesStore.getUploadingFiles.length"></uploads-list> -->
-    <vue-selecto
+    <!-- <vue-selecto
       :selectableTargets="['.list-item']"
       :dragContainer="dragContainer"
       :hitRate="40"
@@ -71,7 +80,7 @@
       @selectStart="onSelectStart"
       @selectEnd="onSelectEnd"
       @select="onSelect"
-      />
+      /> -->
   </div>
 </template>
 
@@ -122,8 +131,6 @@ import { useFilesStore } from '@/stores/files'
 import { VueSelecto } from 'vue3-selecto'
 
 
-import { supabase } from '@/core/supabaseClient'
-
 
 const filesStore = useFilesStore()
 
@@ -134,8 +141,6 @@ const viewSettings = filesStore.viewSettings
 const sortSettings = filesStore.sortSettings
 
 
-// const isVideo = ext => ["video/mp4"].includes(ext)
-// const isImage = ext => ["image/jpeg", "image/png"].includes(ext)
 
 const handleSortSelect = (v) => filesStore.updateSort(v)
 
@@ -156,15 +161,9 @@ const viewClass = computed(() => {
   return filesStore.view === 'by-tile' ? 'list-items--by-tile' : 'list-items--by-list'
 })
 
-onMounted(async () => {
-  await filesStore.fetchFiles()
-  await filesStore.fetchBuckets()
+// get all files
+files.value = computed(() => filesStore.getFiles)
 
-  files.value = filesStore.getFiles
-  buckets.value = filesStore.getBuckets
-
-  // console.log(files.value)
-})
 </script>
 
 <style lang="scss">
