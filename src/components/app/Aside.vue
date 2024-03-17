@@ -4,6 +4,8 @@
       <UploadButton v-model:path="avatar_url" @upload="updateProfile" size="10" />
     </div>
 
+    <!-- {{  filesSize  }} -->
+
     <nav class="app-aside__nav">
       <RouterLink to="/files" class="app-aside__nav-link">
         <fileIcon style="font-size: 1em" />
@@ -103,9 +105,12 @@ import playBoxMultiple from '~icons/mdi/play-box-multiple';
 
 
 import { formatFileSize } from "@/utils/formatFileSize.js"
-import { isImage, isVideo } from "@/utils/is.js"
+import { isImage, isVideo, isDocument, isAudio } from "@/utils/is.js"
 import { supabase } from '@/core/supabaseClient'
 import { onMounted, computed, ref } from 'vue'
+import { useFilesStore } from '@/stores/files'
+
+const filesStore = useFilesStore()
 
 const imagesSize = ref(0)
 const documentsSize = ref(0)
@@ -124,33 +129,38 @@ const storageVolume = ref(1000000000)
 const isEmpty = computed(() => filesSize.value === 0)
 
 
-const getBucket = async () => {
-  const { data, error } = await supabase
-    .storage
-    .from('avatars')
-    .list('public/')
 
-  return {data, error}
+async function getBucketFilesSize() {
+  const { data: files, error } = await supabase.storage.from('avatars').list();
+
+  if (error) {
+    console.error('Error fetching files:', error.message);
+    return;
+  }
+
+  let totalSize = 0;
+
+  // console.log('FILES:', files)
+
+  files.forEach(file => {
+    totalSize += file.metadata.size;
+  });
+
+  filesSize.value = totalSize
+
+  // console.log('Total size of all files in the bucket:', totalSize, 'bytes');
 }
 
-const sortedData = async () => {
-  let bucket = await getBucket()
+getBucketFilesSize();
 
-  let images = []
-  let videos = []
-  let documents = []
-  let other = []
 
-  let sorted = await bucket.data.map(el => {
-    if (isImage(el.metadata.mimetype)) images.push(el.metadata.size)
-    if (isVideo(el.metadata.mimetype)) videos.push(el.metadata.size)
+const files = ref([])
 
-    imagesSize.value = images.reduce((a, b) => a + b, 0)
-    videosSize.value = videos.reduce((a, b) => a + b, 0)
-  })
+// get all files
+files.value = filesStore.getFiles
+// console.log(files.value)
 
-  return sorted
-}
+
 
 const storageCapacity = computed(() => {
   return ((filesSize.value / storageVolume.value) * 100).toFixed(2)
@@ -160,12 +170,42 @@ const freeSpace = computed(() => {
   return storageVolume.value - filesSize.value
 })
 
-onMounted(async () => {
-  let data = await getBucket()
-  const s = await data.data.map(el => el.metadata.size).reduce((a, b) => a + b, 0)
-  filesSize.value = s
-  sortedData()
+const sortedData = computed(() => {
+  return files.value.reduce((acc, item) => {
+      if (isImage(item.metadata.mimetype)) {
+        acc.images += item.metadata.size
+        imagesSize.value += item.metadata.size
+      } else if (isVideo(item.metadata.mimetype)) {
+        acc.videos += item.metadata.size
+        videosSize.value += item.metadata.size
+      } else if (isDocument(item.metadata.mimetype)) {
+        acc.documents += item.metadata.size
+        documentsSize.value += item.metadata.size
+      } else if (isAudio(item.metadata.mimetype)) {
+        acc.audio += item.metadata.size
+        audioSize.value += item.metadata.size
+      } else {
+        acc.other += item.metadata.size
+        otherSize.value += item.metadata.size
+      }
+      return acc
+    }, { images: 0, videos: 0, documents: 0, audio: 0, other: 0 })
 })
+
+
+// const size = computed(async () => await filesStore.getFullStorageSize)
+
+
+// onMounted(async () => {
+//   // let data = await getBucket()
+//   // const s = await data.data.map(el => el.metadata.size).reduce((a, b) => a + b, 0)
+//   // filesSize.value = s
+//   // sortedData()
+
+//   // filesSize.value = await filesStore.getFullStorageSize
+//   // // filesSize.value = size
+
+// })
 </script>
 
 <style lang="scss">  

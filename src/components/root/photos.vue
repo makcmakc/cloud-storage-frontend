@@ -13,7 +13,21 @@
           <FileCard v-for="item in photos" :key="item.id" :item="item" :data-id="item.id" />
         </div> -->
 
-        <!-- {{ handleContextMenuPosition }} -->
+
+        <ul>
+            <li v-for="(item, index) in items" :key="index" @contextmenu.prevent="showContextMenu($event, index)">
+                {{ item }}
+            </li>
+        </ul>
+
+        <div v-if="isContextMenuVisible" class="context-menu" :style="{ top: contextMenuTop + 'px', left: contextMenuLeft + 'px' }">
+            <ul>
+                <li @click="handleItemClick('Edit')">Edit</li>
+                <li @click="handleItemClick('Delete')">Delete</li>
+            </ul>
+        </div>
+
+
 
         <div class="photo-grid">
           <div class="photo-preview"
@@ -139,6 +153,36 @@ const photos = ref([])
 
 const publicURL = ref('')
 
+
+const items = ref(['Item 1', 'Item 2', 'Item 3'])
+const isContextMenuVisible = ref(false)
+
+const contextMenuTop = ref(0)
+const contextMenuLeft = ref(0)
+const clickedItemIndex = ref(null)
+
+const showContextMenu = (event, index) => {
+  event.preventDefault();
+  isContextMenuVisible.value = true;
+  contextMenuTop.value = event.pageY;
+  contextMenuLeft.value = event.pageX;
+  clickedItemIndex.value = index;
+}
+
+const handleItemClick = (action) => {
+  if (action === 'Edit') {
+    alert('Editing item: ' + items.value[clickedItemIndex.value]);
+  } else if (action === 'Delete') {
+    items.value.splice(clickedItemIndex.value, 1);
+  }
+  isContextMenuVisible.value = false;
+}
+
+
+
+
+
+
 async function getPhotos() {
   const { data } = await supabase
     .storage
@@ -162,47 +206,47 @@ async function getPhotosURL() {
   publicURL.value = data.publicUrl
 }
 
-const isVideo = ext => ["video/mp4"].includes(ext)
-const isImage = ext => ["image/jpeg"].includes(ext)
+// const isVideo = ext => ["video/mp4"].includes(ext)
+// const isImage = ext => ["image/jpeg"].includes(ext)
 
 
-const xRef = ref(0);
-const yRef = ref(0);
-const showPopoverRef = ref(true);
+// const xRef = ref(0);
+// const yRef = ref(0);
+// const showPopoverRef = ref(true);
 
-const handleContextMenuPosition = computed(() => {
-  return `left: ${xRef.value}px; top: ${yRef.value}px;`
-})
+// const handleContextMenuPosition = computed(() => {
+//   return `left: ${xRef.value}px; top: ${yRef.value}px;`
+// })
 
-const handleContextMenu = (e, photo) => {
-  e.preventDefault()
-  // if (showPopoverRef.value) {
-  //   showPopoverRef.value = false;
-  // } else {
-  //   showPopoverRef.value = true;
-  //   xRef.value = e.clientX;
-  //   yRef.value = e.clientY;
-  // }
-      xRef.value = e.clientX;
-    yRef.value = e.clientY;
-  console.log(xRef.value, yRef.value)
-}
+// const handleContextMenu = (e, photo) => {
+//   e.preventDefault()
+//   // if (showPopoverRef.value) {
+//   //   showPopoverRef.value = false;
+//   // } else {
+//   //   showPopoverRef.value = true;
+//   //   xRef.value = e.clientX;
+//   //   yRef.value = e.clientY;
+//   // }
+//       xRef.value = e.clientX;
+//     yRef.value = e.clientY;
+//   console.log(xRef.value, yRef.value)
+// }
 
-const handleOpenFile = (e, photo) => {
-  console.log(e, photo)
-}
+// const handleOpenFile = (e, photo) => {
+//   console.log(e, photo)
+// }
 
-const handleClose = (e) => {
-  console.log(e)
-  showPopoverRef.value = false
-}
+// const handleClose = (e) => {
+//   console.log(e)
+//   showPopoverRef.value = false
+// }
 
 
-const viewStore = useFilesStore()
+// const viewStore = useFilesStore()
 
-const viewClass = computed(() => {
-  return  viewStore.view === 'by-tile' ? 'list-items--by-tile' : 'list-items--by-list'
-})
+// const viewClass = computed(() => {
+//   return  viewStore.view === 'by-tile' ? 'list-items--by-tile' : 'list-items--by-list'
+// })
 
 
 onMounted(() => {
@@ -214,9 +258,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.n-popover.n-popover-shared {
-  padding: 0 !important;
-}
+    .context-menu {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+
 </style>
 
 <style lang="scss" scoped>

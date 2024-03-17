@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
+import { VitePWA } from 'vite-plugin-pwa'
 
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
@@ -26,7 +27,8 @@ export default defineConfig({
         }),
       ],
     }),
-    Icons({autoInstall: true,}),
+    Icons({ autoInstall: true }),
+    VitePWA({ registerType: 'autoUpdate' })
   ],
   resolve: {
     alias: {

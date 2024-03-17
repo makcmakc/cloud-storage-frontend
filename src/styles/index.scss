@@ -102,7 +102,7 @@ a {
   margin: 0 20px;
   gap: 20px;
   padding-bottom: 20px;
-  // min-height: calc(100vh - 80px);
+  // min-height: calc(100vh - 80px); 
   border-radius: 10px;
 
   @include media(sm2) {

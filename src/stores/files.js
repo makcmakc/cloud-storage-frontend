@@ -62,6 +62,9 @@ export const useFilesStore = defineStore('files', {
     getViewSettings: state => state.viewSettings,
     getSortSettings: state => state.sortSettings,
     getUploadingFiles: state => state.uploadingFiles,
+    getFullStorageSize: () => {
+      return this.getFiles
+    }
   },
   actions: {
     async fetchFiles() {
