@@ -63,6 +63,9 @@ devDependencies:
   '@iconify-json/ep':
     specifier: ^1.1.11
     version: 1.1.11
+  '@iconify-json/f7':
+    specifier: ^1.1.0
+    version: 1.1.0
   '@iconify-json/fluent':
     specifier: ^1.1.39
     version: 1.1.39
@@ -1698,6 +1701,12 @@ packages:
 
   /@iconify-json/ep@1.1.11:
     resolution: {integrity: sha512-g08CJ1qod1FyqJk33sTH+PjcdBjukzBMscc+V0LjKi6jYg8EQSrJMolay/cgjWoqlHt6HP26fckQ+Efl8GlW1g==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/f7@1.1.0:
+    resolution: {integrity: sha512-CSY3ZVPkCGBdx1FjAi/VDV3is68CMM1E8qVWUQwy3rGJeHHsfdo0M10sY4I65gC8DvcUdr+uqnRQ64R3eHC69g==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true

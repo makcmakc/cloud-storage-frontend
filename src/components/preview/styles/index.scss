@@ -25,19 +25,58 @@
   }
 }
 
-.el-audio-viewer__btn,
-.el-video-viewer__btn {
-  position: absolute;
-  z-index: 1;
+
+.player {
+  width: 100%;
+  position: relative;
+  max-width: 1000px;
+
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  opacity: 0.8;
-  cursor: pointer;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  user-select: none;  
+  // justify-content: space-around;
+  gap: 25px;
+
+  &__play {
+    color: #fff;
+    font-size: 22px;
+    line-height: 0;
+  }
+
+  &__duration {
+    width: 300px;
+  }
+
+  &__time-range {
+    color: #fff;
+  }
+
+  &__volume {
+    display: flex;
+    align-items: center;
+  
+    &-icon {
+      color: #fff;
+      padding-right: 15px;
+      font-size: 18px;
+      line-height: 0;
+    }
+
+    &-slider {
+      width: 100px;
+    }
+  }
+
+  &__repeat {
+    color: #fff;
+    line-height: 0;
+    font-size: 18px;
+  }
+
+  &__download {
+    color: #fff;
+    line-height: 0;
+    font-size: 18px;
+  }
 }
 
 
@@ -52,6 +91,18 @@
   background-color: var(--el-text-color-regular);
   border-color: #fff;
   border-radius: 22px;
+
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0.8;
+  cursor: pointer;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;   
 }
 
 

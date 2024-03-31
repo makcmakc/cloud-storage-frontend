@@ -23,7 +23,10 @@
             <img src="@/assets/docs-logo.png" alt="">
           </div>
           <div v-if="isAudio(item.metadata.mimetype)">
-            <img src="@/assets/equalizer.png" alt="" @dblclick="showPreview(item, idx)" />
+            <img
+              src="@/assets/equalizer.png"
+              @dblclick="showPreview(item, idx)"
+            />
           </div>
           
       </div>
@@ -76,40 +79,52 @@
             </div>
           </div>
 
-          <div class="el-video-viewer__btn el-video-viewer__actions" v-if="isVideo(currentItem.metadata.mimetype)">
-            <div  class="el-image-viewer__actions__inner">
-              <div class="el-audio__play" @click="playHandler">
-                <el-icon v-if="!isPlaying"><VideoPlay /></el-icon>
-                <el-icon v-else><VideoPause /></el-icon>
-              </div>
+          <div class="el-video-viewer__actions" v-if="isVideo(currentItem.metadata.mimetype)">
+            <!-- <div  class="el-video-viewer__actions__inner"> -->
+              <div class="player">
+                <div class="player__play" @click="playHandler">
+                  <!-- <el-icon v-if="!isPlaying"><VideoPlay /></el-icon>
+                  <el-icon v-else><VideoPause /></el-icon> -->
+                  <F7PlayFill v-if="!isPlaying" />
+                  <F7PauseFill v-else />
+                </div>
 
-              <div class="el-audio__duration">
-                <el-slider v-model="duration" />
-              </div>
+                <div class="player__duration">
+                  <el-slider v-model="duration" />
+                </div>
 
-              <div class="el-audio__time-range">
-                <!-- <span class="time">0:00</span> / 
-                <span class="time">0:00</span> -->
-                {{  currentTime  }}
-              </div>
+                <div class="player__time-range">
+                  {{  currentTime  }}
+                </div>
 
-              <div class="el-audio__volume">
-                <el-slider v-model="value1" />
-              </div>
+                <div class="player__volume">
+                  <div class="player__volume-icon" @click="muteHanlder(volume)">
+                    <F7SpeakerSlashFill v-if="isMuted" />
+                    <F7SpeakerFill v-else-if="volume <= 10" />
+                    <F7Speaker1Fill v-else-if="volume <= 55" />
+                    <F7Speaker2Fill v-else-if="volume <= 100" />
+                  </div>
+                  <div class="player__volume-slider">
+                    <el-slider v-model="volume" />
+                  </div>
+                </div>
 
-              <div class="el-audio__repeat">
-                <el-icon><Refresh /></el-icon>
-              </div>  
+                <div class="player__repeat" title="Repeat">
+                  <!-- <el-icon><Refresh /></el-icon> -->
+                  <F7Repeat />
+                </div>  
 
-              <div class="el-audio__download">
-                <el-icon>
-                  <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728="">
-                    <path fill="currentColor" d="M160 832h704a32 32 0 1 1 0 64H160a32 32 0 1 1 0-64zm384-253.696 236.288-236.352 45.248 45.248L508.8 704 192 387.2l45.248-45.248L480 584.704V128h64v450.304z">
-                    </path>
-                  </svg>
-                </el-icon>
+                <div class="player__download" title="Download">
+                  <F7CloudDownload />
+                  <!-- <el-icon>
+                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728="">
+                      <path fill="currentColor" d="M160 832h704a32 32 0 1 1 0 64H160a32 32 0 1 1 0-64zm384-253.696 236.288-236.352 45.248 45.248L508.8 704 192 387.2l45.248-45.248L480 584.704V128h64v450.304z">
+                      </path>
+                    </svg>
+                  </el-icon> -->
+                </div>
               </div>
-            </div>
+            <!-- </div> -->
           </div>          
 
           <div class="el-audio-viewer__btn el-audio-viewer__actions" v-if="isAudio(currentItem.metadata.mimetype)">
@@ -119,7 +134,7 @@
               </div>
 
               <div class="el-audio__duration">
-                <el-slider v-model="value1" />
+                <el-slider v-model="duration" />
               </div>
 
               <div class="el-audio__time-range">
@@ -128,7 +143,7 @@
               </div>
 
               <div class="el-audio__volume">
-                <el-slider v-model="value1" />
+                <el-slider v-model="volume" />
               </div>
 
               <div class="el-audio__repeat">
@@ -158,45 +173,13 @@
           <div class="el-video-viewer__canvas" v-if="isVideo(currentItem.metadata.mimetype)">
             <video
               :src="getOriginSource(currentItem)"
-              @loadedmetadata="(event) => handleLoadedMetaData(event)"
-              @play="(event) => console.log('play', event)"
-              @pause="(event) => console.log('pause', event)"
-              @timeupdate="(event) => metadataHandler(event)"
-              @volumechange="(event) => console.log('volumechange', event)"
+              @timeupdate="e => metadataHandler(e)"
               @error="(event) => console.log('error', event)"
               class="el-video-viewer__video"
               ref="videoPreview"
-              style="
-                transform: scale(0.9) rotate(0deg) translate(0px, 0px);
-                max-height: 100%;
-                max-width: 100%;
-              "
+              volume="0.5"
+              style="transform: scale(0.9) rotate(0deg) translate(0px, 0px);"
             ></video>
-            <!-- <VideoPreview 
-              :url="getOriginSource(currentItem)"
-              class="videoplayer"
-              :muted="false"
-              :autoplay="false"
-              :loop="false"
-              poster="https://demo-res.cloudinary.com/video/upload/q_auto,f_auto,w_500/dog.jpg"
-              @play="onPlayerPlay"
-              @pause="onPlayerPause"
-              @ended="onPlayerEnded"
-              @loadeddata="onPlayerLoadeddata"
-              @waiting="onPlayerWaiting"
-              @playing="onPlayerPlaying"
-              @timeupdate="onPlayerTimeupdate"
-              @canplay="onPlayerCanplay"
-              @canplaythrough="onPlayerCanplaythrough"
-              @statechanged="playerStateChanged"
-            /> -->
-                        <!-- <video v-if="isVideo(currentItem.metadata.mimetype)"
-              :src="getOriginSource(currentItem)"
-              class="el-image-viewer__img"
-              ref="preview"
-              style="transform: scale(0.9) rotate(0deg) translate(0px, 0px);max-height: 100%;max-width: 100%;"  
-              controls>
-            </video> -->
           </div>
 
           <div class="el-audio-viewer__canvas" v-if="isAudio(currentItem.metadata.mimetype)">
@@ -217,7 +200,7 @@
 </template>
 
 <script setup>
-import { computed, effectScope, onMounted, ref, toRefs } from 'vue'
+import { computed, effectScope, onMounted, ref, toRefs, watch } from 'vue'
 import { supabase } from '@/core/supabaseClient'
 // import { useFilesStore } from '../../stores/files'
 import { getExtensionFromFileName } from "@/utils/getExtensionFromFileName.js"
@@ -241,14 +224,22 @@ import {
   VideoPause
 } from '@element-plus/icons-vue'
 
+import F7SpeakerFill from '~icons/f7/speaker-fill';
+import F7Speaker1Fill from '~icons/f7/speaker-1-fill';
+import F7Speaker2Fill from '~icons/f7/speaker-2-fill';
+import F7SpeakerSlashFill from '~icons/f7/speaker-slash-fill';
+import F7Repeat from '~icons/f7/repeat';
+import F7PlayFill from '~icons/f7/play-fill';
+import F7PauseFill from '~icons/f7/pause-fill';
+import F7CloudDownload from '~icons/f7/cloud-download';
 
-const value1 = ref()
-
-
-const time = ref(0)
 
 const isPlaying = ref(false)
+const isMuted = ref(false)
+const isRepeat = ref(false)
+
 const videoPreview = ref(null)
+const volume = ref(50)
 
 const duration = ref(0)
 const currentTime = ref("00:00")
@@ -266,22 +257,22 @@ const emit = defineEmits([
 
 const video = ref(null);
 
-const handleLoadedMetaData = (event) => {
-  const meta = Object.assign({}, {
-    video: {
-      // ...data.video,
-      element: event.target,
-      // canvas: canvas.value,
-      width: event.target.videoWidth,
-      height: event.target.videoHeight,
-      duration: event.target.duration,
-      // paused: !(props.muted === true && props.autoplay === true),
-    }
-  });
+// const handleLoadedMetaData = (event) => {
+//   const meta = Object.assign({}, {
+//     video: {
+//       // ...data.video,
+//       element: event.target,
+//       // canvas: canvas.value,
+//       width: event.target.videoWidth,
+//       height: event.target.videoHeight,
+//       duration: event.target.duration,
+//       // paused: !(props.muted === true && props.autoplay === true),
+//     }
+//   });
 
-  // initialVideo();
-  console.log("initialVideo", event, meta)
-};
+//   // initialVideo();
+//   console.log("initialVideo", event, meta)
+// };
 
 const playHandler = () => {
   const audio = videoPreview.value
@@ -294,6 +285,26 @@ const playHandler = () => {
   isPlaying.value = !isPlaying.value
 }
 
+function muteHanlder(v) {
+  // const audio = videoPreview.value
+
+  const currentVolume = videoPreview.value.volume
+  // const lastSetVolume = v
+  // videoPreview.value.volume
+
+  // console.log("muteHanlder", v, lastSetVolume)
+
+  if (currentVolume !== 0) {
+    // volume.value = 0
+    videoPreview.value.volume = 0
+  }
+  else {
+    videoPreview.value.volume = v / 100
+  }
+
+  isMuted.value = !isMuted.value
+}
+
 function formatTime(seconds) {
   let minutes
 
@@ -304,7 +315,11 @@ function formatTime(seconds) {
   return minutes + ":" + seconds
 }
 
-const metadataHandler = (e) => {
+watch(volume, (val) => {
+  if (!isMuted.value) videoPreview.value.volume = val / 100
+})
+
+const metadataHandler = e => {
   const t  =  Math.floor(e.target.currentTime)
   const dur  =  e.target.duration
 
@@ -506,6 +521,8 @@ onMounted(() => {
   // add tabindex then wrapper can be focusable via Javascript
   // focus wrapper so arrow key can't cause inner scroll behavior underneath
   // wrapper.value?.focus?.()
+
+  // videoPreview.value.volume = volume.value
 })
 
 
